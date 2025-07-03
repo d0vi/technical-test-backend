@@ -8,7 +8,6 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles(profiles = "test")
 public class WalletApplicationIT {
 
-	@Test
-	public void emptyTest() {
-	}
+  @Test
+  public void emptyTest() {}
 }

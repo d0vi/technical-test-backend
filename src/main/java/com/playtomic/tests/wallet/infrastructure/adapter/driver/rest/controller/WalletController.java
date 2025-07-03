@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class WalletController {
-    private Logger log = LoggerFactory.getLogger(WalletController.class);
+  private Logger log = LoggerFactory.getLogger(WalletController.class);
 
-    @RequestMapping("/")
-    void log() {
-        log.info("Logging from /");
-    }
+  @RequestMapping("/")
+  void log() {
+    log.info("Logging from /");
+  }
 }
