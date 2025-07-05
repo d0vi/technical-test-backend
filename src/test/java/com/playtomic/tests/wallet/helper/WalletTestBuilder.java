@@ -12,7 +12,7 @@ public class WalletTestBuilder {
 
   private String id = UUID.randomUUID().toString();
   private BigDecimal balance = BigDecimal.ZERO;
-  private Long version = 0L;
+  private Long version = null;
   private LocalDateTime createdAt = LocalDateTime.now();
   private LocalDateTime updatedAt = null;
   private LocalDateTime deletedAt = null;
