@@ -1,0 +1,10 @@
+version: 2
+updates:
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    assignees:
+      - "d0vi"
+    commit-message:
+      prefix: "🤖️"
