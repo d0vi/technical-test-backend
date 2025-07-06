@@ -1,27 +1,56 @@
 package com.playtomic.tests.wallet.infrastructure.adapter.driven.provider.stripe;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import com.playtomic.tests.wallet.WalletApplicationIT;
 import java.math.BigDecimal;
-import java.net.URI;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 
-public class StripeServiceTest {
+@AutoConfigureWireMock(port = 9999)
+public class StripeServiceTest extends WalletApplicationIT {
 
-  URI testUri = URI.create("http://how-would-you-test-me.localhost");
-  StripeService s = new StripeService(testUri, testUri, new RestTemplate());
+  @Autowired private StripeService stripeService;
 
   @Test
   public void test_exception() {
-    Assertions.assertThrows(
-        StripeAmountTooSmallException.class,
-        () -> {
-          s.charge("4242 4242 4242 4242", new BigDecimal(5));
-        });
+    stubFor(post(urlEqualTo("/charges")).willReturn(aResponse().withStatus(422)));
+
+    assertThatThrownBy(() -> this.stripeService.charge("4242 4242 4242 4242", new BigDecimal(5)))
+        .isInstanceOf(StripeAmountTooSmallException.class);
   }
 
   @Test
   public void test_ok() throws StripeServiceException {
-    s.charge("4242 4242 4242 4242", new BigDecimal(15));
+    stubFor(
+        post(urlEqualTo("/charges"))
+            .willReturn(
+                aResponse()
+                    .withStatus(200)
+                    .withHeader("Content-Type", "application/json")
+                    .withBody(
+                        """
+                {
+                  "id": "bd4e65ad-9f43-4939-b176-0f428f46bea6",
+                  "amount": 15
+                }
+                """)));
+
+    String paymentId = this.stripeService.charge("4242 4242 4242 4242", new BigDecimal(15));
+
+    verify(
+        postRequestedFor(urlEqualTo("/charges"))
+            .withRequestBody(
+                equalToJson(
+                    """
+            {
+              "credit_card": "4242 4242 4242 4242",
+              "amount": 15
+            }
+            """)));
+    assertThat(paymentId).isEqualTo("bd4e65ad-9f43-4939-b176-0f428f46bea6");
   }
 }
