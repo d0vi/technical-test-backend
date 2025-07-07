@@ -1,33 +1,68 @@
-# Wallets Service
-In Playtomic, we have a service to manage our wallets. Our players can top-up their wallets using a credit card and spend that money on our platform (bookings, racket rentals, ...)
+[![Build status](https://github.com/d0vi/technical-test-backend/workflows/CI/badge.svg)](https://github.com/d0vi/technical-test-backend/actions/workflows/main.yml)
 
-That service has the following operations:
-- You can query your balance.
-- You can top-up your wallet. In this case, we charge the amount using a third-party payments platform (stripe, paypal, redsys).
-- You can spend your balance on purchases in Playtomic. 
-- You can return these purchases, and your money is refunded.
-- You can check your history of transactions.
+# 💰 Wallet Service
 
-This exercise consists of building a proof of concept of that wallet service.
-You have to code endpoints for these operations:
-1. Get a wallet using its identifier.
-1. Top-up money in that wallet using a credit card number. It has to charge that amount internally using a third-party platform.
+Managing your digital wallet never felt so easy 🫢️
 
-You don't have to write the following operations, but we will discuss possible solutions during the interview:
-1. How to spend money from the wallet.
-1. How to refund that money.
+### 🚀 Features
 
-The basic structure of a wallet is its identifier and its current balance. If you think you need extra fields, add them. We will discuss it in the interview. 
+- **💳 Wallet Management**: Query balances and manage digital wallets
+- **🔄 Top-up Operations**: Add funds using credit cards via external payment providers
+- **💼 Transaction History**: Track all wallet operations and payments
+- **🔐 Secure Payments**: Integration with Stripe for secure payment processing
+- **📊 Event-Driven**: RabbitMQ integration for real-time event processing
 
-So you can focus on these problems, you have here a maven project with a Spring Boot application. It already contains
-the basic dependencies and an H2 database. There are development and test profiles.
+### 🛠️ Tech Stack
 
-You can also find an implementation of the service that would call to the real payments platform (StripePaymentService).
-This implementation is calling to a simulator deployed in one of our environments. Take into account
-that this simulator will return 422 http error codes under certain conditions.
+- **Spring Boot 3** - Modern Java framework
+- **Spring Data JPA** - Database operations
+- **H2 Database** - In-memory database for development
+- **Flyway** - Database migrations
+- **RabbitMQ** - Message broker for events
+- **WireMock** - HTTP service mocking for tests
+- **Maven** - Dependency management
 
-Consider that this service must work in a microservices environment in high availability. You should care about concurrency too.
+### ➡️ Requirements
 
-You can spend as much time as you need but we think that 4 hours is enough to show [the requirements of this job.](OFFER.md)
-You don't have to document your code, but you can write down anything you want to explain or anything you have skipped.
-You don't need to write tests for everything, but we would like to see different types of tests.
+In order to run this application, a valid JDK 24 version must be present in your system.
+
+Use [SDKMAN!](https://sdkman.io/) to install the Eclipse Temurin JDK:
+```
+sdk install java 24-tem
+```
+
+### 🏃🏻‍♂️ Run the application
+
+Open a new terminal and execute:
+
+```
+docker compose up -d
+
+./mvnw spring-boot:run
+```
+
+Or, if you wish to run the test suite:
+
+```
+./mvnw test
+```
+
+### 📡 API Endpoints
+
+- `POST /playtomic/api/v1/wallets` - Create a new wallet
+- `GET /playtomic/api/v1/wallets/{id}` - Get wallet information
+- `POST /playtomic/api/v1/wallets/{id}/top-up` - Add funds to wallet
+
+### 🏗️ Architecture
+
+Built with **Hexagonal Architecture** principles:
+- **Domain Layer**: Core business logic
+- **Application Layer**: Use cases and services  
+- **Infrastructure Layer**: External integrations (DB, payments, messaging)
+
+### 🧪 Testing
+
+Comprehensive test coverage including:
+- Unit tests for business logic
+- Integration tests for external services
+- ⚠️ TODO: End-to-end API tests
