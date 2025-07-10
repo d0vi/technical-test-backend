@@ -19,28 +19,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
-import org.testcontainers.containers.RabbitMQContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-@Testcontainers
 class RabbitMQEventListenerIT extends WalletApplicationIT {
-
-  @Container
-  static RabbitMQContainer rabbitMQ =
-      new RabbitMQContainer("rabbitmq:3.11-management")
-          .withUser("admin", "password")
-          .withVhost("dev")
-          .withPermission("dev", "admin", ".*", ".*", ".*");
-
-  @DynamicPropertySource
-  static void configureProperties(DynamicPropertyRegistry registry) {
-    registry.add("spring.rabbitmq.host", rabbitMQ::getHost);
-    registry.add("spring.rabbitmq.port", rabbitMQ::getAmqpPort);
-  }
 
   @Autowired private RabbitTemplate rabbitTemplate;
 
