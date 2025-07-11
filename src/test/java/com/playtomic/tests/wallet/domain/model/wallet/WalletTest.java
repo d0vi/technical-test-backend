@@ -13,10 +13,12 @@ import org.junit.jupiter.api.Test;
 
 class WalletTest {
 
+  private static final String CURRENCY_EUR = "EUR";
+
   @Test
   @DisplayName("should create a wallet")
   void should_create_a_wallet() {
-    Wallet wallet = new Wallet();
+    Wallet wallet = new Wallet(CURRENCY_EUR);
 
     assertThat(wallet).isNotNull();
     assertThat(wallet.id()).isNotNull();
@@ -33,6 +35,7 @@ class WalletTest {
   void should_create_a_wallet_with_all_parameters() {
     String walletIdString = "123e4567-e89b-12d3-a456-426614174000";
     BigDecimal balance = new BigDecimal("150.75");
+    String currency = CURRENCY_EUR;
     Long version = 3L;
     LocalDateTime createdAt = LocalDateTime.now().minusHours(2);
     LocalDateTime updatedAt = LocalDateTime.now().minusHours(1);
@@ -54,7 +57,8 @@ class WalletTest {
                 updatedAt.minusMinutes(5)));
 
     Wallet wallet =
-        new Wallet(walletIdString, balance, version, createdAt, updatedAt, null, transactions);
+        new Wallet(
+            walletIdString, balance, currency, version, createdAt, updatedAt, null, transactions);
 
     assertThat(wallet.id()).isEqualTo(UUID.fromString(walletIdString));
     assertThat(wallet.balance()).isEqualTo(balance.setScale(2, RoundingMode.HALF_UP));
@@ -70,7 +74,7 @@ class WalletTest {
   @Test
   @DisplayName("should deposit an amount successfully")
   void should_deposit_amount_successfully() {
-    Wallet wallet = new Wallet();
+    Wallet wallet = new Wallet(CURRENCY_EUR);
     BigDecimal initialBalance = wallet.balance();
     BigDecimal depositAmount = new BigDecimal("100.50");
     String paymentId = "d9183c7d-a682-47be-9817-96d3627539ee";

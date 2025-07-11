@@ -71,7 +71,7 @@ class TopUpUseCaseTest {
     BigDecimal amount = new BigDecimal("200.00");
     String paymentId = "d9183c7d-a682-47be-9817-96d3627539ee";
 
-    Wallet existingWallet = new Wallet();
+    Wallet existingWallet = new Wallet("EUR");
     when(this.walletRepository.findById(walletId)).thenReturn(Optional.of(existingWallet));
     when(this.paymentService.charge(creditCard, amount)).thenReturn(paymentId);
 

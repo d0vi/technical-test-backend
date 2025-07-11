@@ -11,6 +11,7 @@ public class WalletEntityMapper {
     return new WalletEntity(
         wallet.id(),
         wallet.balance(),
+        wallet.currency(),
         Timestamp.valueOf(wallet.createdAt()),
         Optional.ofNullable(wallet.updatedAt()).map(Timestamp::valueOf).orElse(null),
         Optional.ofNullable(wallet.deletedAt()).map(Timestamp::valueOf).orElse(null),
@@ -22,6 +23,7 @@ public class WalletEntityMapper {
     return new Wallet(
         wallet.getId().toString(),
         wallet.getBalance(),
+        wallet.getCurrency(),
         wallet.getVersion(),
         wallet.getCreatedAt().toLocalDateTime(),
         Optional.ofNullable(wallet.getUpdatedAt()).map(Timestamp::toLocalDateTime).orElse(null),

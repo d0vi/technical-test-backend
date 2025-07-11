@@ -34,6 +34,9 @@ public class WalletEntity {
   @Column(name = "balance", nullable = false, precision = 19, scale = 2)
   private BigDecimal balance;
 
+  @Column(name = "currency", nullable = false)
+  private String currency;
+
   @Column(name = "created_at", nullable = false)
   private Timestamp createdAt;
 

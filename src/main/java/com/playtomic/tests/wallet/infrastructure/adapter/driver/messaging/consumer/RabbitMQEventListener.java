@@ -23,11 +23,10 @@ public class RabbitMQEventListener {
   @RabbitListener(queues = MessagingConfiguration.WALLET_EVENTS_QUEUE)
   public void handleWalletEvents(Event event) {
     switch (event) {
-      case WalletCreated walletCreated ->
-          logger.info("Wallet {} has been created", walletCreated.walletId());
-      case WalletToppedUp walletToppedUp ->
-          logger.info(
-              "Wallet {} has added {} EUR", walletToppedUp.walletId(), walletToppedUp.amount());
+      case WalletCreated wc ->
+          logger.info("Wallet {} ({}) has been created", wc.walletId(), wc.currency());
+      case WalletToppedUp wtu ->
+          logger.info("Wallet {} has added {} EUR", wtu.walletId(), wtu.amount());
       default -> logger.warn("Unknown domain event type: {}", event.getClass().getSimpleName());
     }
   }

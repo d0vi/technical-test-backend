@@ -12,6 +12,7 @@ public class WalletTestBuilder {
 
   private String id = UUID.randomUUID().toString();
   private BigDecimal balance = BigDecimal.ZERO;
+  private String currency = "EUR";
   private Long version = null;
   private LocalDateTime createdAt = LocalDateTime.now();
   private LocalDateTime updatedAt = null;
@@ -35,6 +36,11 @@ public class WalletTestBuilder {
 
   public WalletTestBuilder withBalance(String balance) {
     this.balance = new BigDecimal(balance);
+    return this;
+  }
+
+  public WalletTestBuilder withCurrency(String currency) {
+    this.currency = currency;
     return this;
   }
 
@@ -74,6 +80,7 @@ public class WalletTestBuilder {
   }
 
   public Wallet build() {
-    return new Wallet(id, balance, version, createdAt, updatedAt, deletedAt, transactions);
+    return new Wallet(
+        id, balance, currency, version, createdAt, updatedAt, deletedAt, transactions);
   }
 }

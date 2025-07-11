@@ -14,13 +14,15 @@ import org.springframework.test.context.jdbc.Sql;
 
 class SaveWalletIT extends WalletApplicationIT {
 
+  private static final String CURRENCY_EUR = "EUR";
+
   @Autowired private WalletRepository walletRepository;
 
   @Test
   @Sql(scripts = "/sql/truncate_tables.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
   @DisplayName("should save a wallet")
   void should_save_a_wallet() {
-    Wallet wallet = this.walletRepository.save(new Wallet());
+    Wallet wallet = this.walletRepository.save(new Wallet(CURRENCY_EUR));
 
     assertThat(wallet).isNotNull();
     assertThat(wallet.id()).isNotNull();
@@ -34,7 +36,7 @@ class SaveWalletIT extends WalletApplicationIT {
   @Sql(scripts = "/sql/truncate_tables.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
   @DisplayName("should save a wallet with transactions")
   void should_save_a_wallet_with_transactions() {
-    Wallet wallet = new Wallet();
+    Wallet wallet = new Wallet(CURRENCY_EUR);
     wallet.deposit(new BigDecimal("50.00"), UUID.randomUUID().toString());
     wallet.deposit(new BigDecimal("25.00"), UUID.randomUUID().toString());
 

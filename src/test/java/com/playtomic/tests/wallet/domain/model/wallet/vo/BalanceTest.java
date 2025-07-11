@@ -66,16 +66,6 @@ class BalanceTest {
     assertThat(result.amount()).isEqualTo(new BigDecimal("70.00"));
   }
 
-  @Test
-  @DisplayName("should format toString with currency")
-  void should_format_to_string_with_currency() {
-    Balance balance = new Balance(new BigDecimal("100.50"));
-
-    String result = balance.toString();
-
-    assertThat(result).isEqualTo("100.50 EUR");
-  }
-
   @ParameterizedTest
   @NullSource
   @MethodSource("provideAmounts")

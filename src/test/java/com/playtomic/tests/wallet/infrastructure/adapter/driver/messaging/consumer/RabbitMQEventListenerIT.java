@@ -55,7 +55,7 @@ class RabbitMQEventListenerIT extends WalletApplicationIT {
   @DisplayName("should handle wallet created event")
   void should_handle_a_wallet_created_event() {
     UUID walletId = UUID.randomUUID();
-    WalletCreated event = new WalletCreated(walletId);
+    WalletCreated event = new WalletCreated(walletId, "EUR");
 
     this.rabbitTemplate.convertAndSend(
         MessagingConfiguration.PLAYTOMIC_EXCHANGE, "wallet.new", event);
@@ -96,7 +96,7 @@ class RabbitMQEventListenerIT extends WalletApplicationIT {
   @Test
   @DisplayName("should handle a process payment event")
   void should_handle_a_process_payment_event() {
-    UUID walletId = this.createWalletUseCase.execute().id();
+    UUID walletId = this.createWalletUseCase.execute("EUR").id();
     UUID paymentId = UUID.randomUUID();
     PaymentProcessed event =
         new PaymentProcessed(
