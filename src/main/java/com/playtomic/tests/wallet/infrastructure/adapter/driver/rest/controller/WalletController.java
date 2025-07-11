@@ -5,7 +5,7 @@ import com.playtomic.tests.wallet.application.usecase.wallet.write.CreateWalletU
 import com.playtomic.tests.wallet.application.usecase.wallet.write.TopUpUseCase;
 import com.playtomic.tests.wallet.domain.model.wallet.Transaction;
 import com.playtomic.tests.wallet.domain.model.wallet.Wallet;
-import com.playtomic.tests.wallet.domain.model.wallet.vo.Balance;
+import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.CreateWalletRequest;
 import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.TopUpRequest;
 import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.WalletInfoResponse;
 import jakarta.validation.Valid;
@@ -43,8 +43,9 @@ public class WalletController {
   }
 
   @PostMapping
-  public ResponseEntity<WalletInfoResponse> createWallet() {
-    Wallet wallet = this.createWalletUseCase.execute();
+  public ResponseEntity<WalletInfoResponse> createWallet(
+      @Valid @RequestBody CreateWalletRequest request) {
+    Wallet wallet = this.createWalletUseCase.execute(request.currencyCode());
     return ResponseEntity.ok(this.toWalletResponse(wallet));
   }
 
@@ -59,7 +60,7 @@ public class WalletController {
     return new WalletInfoResponse(
         wallet.id(),
         wallet.balance(),
-        Balance.CURRENCY,
+        wallet.currency(),
         this.toTransactionResponse(wallet.transactions()));
   }
 

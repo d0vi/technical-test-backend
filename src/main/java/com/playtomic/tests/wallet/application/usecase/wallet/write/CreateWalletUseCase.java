@@ -15,9 +15,9 @@ public class CreateWalletUseCase {
     this.eventPublisher = eventBus;
   }
 
-  public Wallet execute() {
-    Wallet wallet = new Wallet();
-    this.eventPublisher.publishDomainEvent(new WalletCreated(wallet.id()));
+  public Wallet execute(String currency) {
+    Wallet wallet = new Wallet(currency);
+    this.eventPublisher.publishDomainEvent(new WalletCreated(wallet.id(), wallet.currency()));
     return this.repository.save(wallet);
   }
 }

@@ -2,6 +2,7 @@ package com.playtomic.tests.wallet.domain.model.wallet;
 
 import com.playtomic.tests.wallet.domain.model.wallet.vo.Audit;
 import com.playtomic.tests.wallet.domain.model.wallet.vo.Balance;
+import com.playtomic.tests.wallet.domain.model.wallet.vo.Currency;
 import com.playtomic.tests.wallet.domain.model.wallet.vo.Version;
 import com.playtomic.tests.wallet.domain.model.wallet.vo.WalletId;
 import java.math.BigDecimal;
@@ -18,13 +19,15 @@ public class Wallet {
 
   private final WalletId id;
   private Balance balance;
+  private final Currency currency;
   private final Version version;
   private Audit audit;
   private final List<Transaction> transactions;
 
-  public Wallet() {
+  public Wallet(String currency) {
     this.id = new WalletId(UUID.randomUUID());
     this.balance = new Balance(BigDecimal.ZERO);
+    this.currency = new Currency(currency);
     this.version = new Version();
     this.audit = new Audit();
     this.transactions = new ArrayList<>();
@@ -33,6 +36,7 @@ public class Wallet {
   public Wallet(
       String id,
       BigDecimal balance,
+      String currency,
       Long version,
       LocalDateTime createdAt,
       LocalDateTime updatedAt,
@@ -40,6 +44,7 @@ public class Wallet {
       List<Transaction> transactions) {
     this.id = new WalletId(id);
     this.balance = new Balance(balance);
+    this.currency = new Currency(currency);
     this.version = new Version(version);
     this.audit = new Audit(createdAt, updatedAt, deletedAt);
     this.transactions = new ArrayList<>(transactions);
@@ -51,6 +56,10 @@ public class Wallet {
 
   public BigDecimal balance() {
     return this.balance.amount();
+  }
+
+  public String currency() {
+    return this.currency.currencyCode().toString();
   }
 
   public Long version() {

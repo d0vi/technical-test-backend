@@ -1,0 +1,1 @@
+ALTER TABLE wallet ADD COLUMN currency CHAR(3) NOT NULL;

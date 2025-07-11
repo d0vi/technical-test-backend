@@ -21,6 +21,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class CreateWalletUseCaseTest {
 
+  private static final String CURRENCY_EUR = "EUR";
+
   @Mock private WalletRepository walletRepository;
   @Mock private DomainEventBus domainEventBus;
 
@@ -29,10 +31,10 @@ class CreateWalletUseCaseTest {
   @Test
   @DisplayName("should create a wallet")
   void should_create_a_wallet() {
-    Wallet expectedWallet = new Wallet();
+    Wallet expectedWallet = new Wallet(CURRENCY_EUR);
     when(this.walletRepository.save(any(Wallet.class))).thenReturn(expectedWallet);
 
-    Wallet result = this.createWalletUseCase.execute();
+    Wallet result = this.createWalletUseCase.execute(CURRENCY_EUR);
 
     assertThat(result).isEqualTo(expectedWallet);
     assertThat(result.id()).isNotNull();
@@ -50,10 +52,10 @@ class CreateWalletUseCaseTest {
   @Test
   @DisplayName("should publish a wallet created event")
   void should_publish_a_wallet_created_event() {
-    Wallet savedWallet = new Wallet();
+    Wallet savedWallet = new Wallet(CURRENCY_EUR);
     when(this.walletRepository.save(any(Wallet.class))).thenReturn(savedWallet);
 
-    this.createWalletUseCase.execute();
+    this.createWalletUseCase.execute(CURRENCY_EUR);
 
     verify(this.domainEventBus)
         .publishDomainEvent(

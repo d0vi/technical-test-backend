@@ -66,6 +66,7 @@ class WalletEntityMapperTest {
     WalletEntity entity = new WalletEntity();
     entity.setId(walletId);
     entity.setBalance(new BigDecimal("75.25"));
+    entity.setCurrency("EUR");
     entity.setVersion(3L);
     entity.setCreatedAt(Timestamp.valueOf(LocalDateTime.now().minusHours(2)));
     entity.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
@@ -83,6 +84,7 @@ class WalletEntityMapperTest {
 
     assertThat(wallet.id()).isEqualTo(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
     assertThat(wallet.balance()).isEqualByComparingTo(new BigDecimal("75.25"));
+    assertThat(wallet.currency()).isEqualTo("EUR");
     assertThat(wallet.version()).isEqualTo(3L);
     assertThat(wallet.createdAt()).isEqualTo(entity.getCreatedAt().toLocalDateTime());
     assertThat(wallet.updatedAt()).isEqualTo(entity.getUpdatedAt().toLocalDateTime());

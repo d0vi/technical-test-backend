@@ -9,8 +9,6 @@ public record Balance(BigDecimal amount) {
 
   private static final BigDecimal MINIMUM_DEPOSIT = BigDecimal.TEN;
 
-  public static final String CURRENCY = "EUR";
-
   public Balance {
     if (amount == null) {
       throw new InvalidBalanceException();
@@ -27,10 +25,5 @@ public record Balance(BigDecimal amount) {
 
   public Balance subtract(BigDecimal amount) {
     return new Balance(this.amount.subtract(amount));
-  }
-
-  @Override
-  public String toString() {
-    return amount + " " + CURRENCY;
   }
 }

@@ -26,7 +26,7 @@ class RabbitMQEventPublisherTest {
   @Test
   @DisplayName("should publish a wallet created event to correct routing key")
   void should_publish_a_wallet_created_event_to_correct_routing_key() {
-    WalletCreated event = new WalletCreated(UUID.randomUUID());
+    WalletCreated event = new WalletCreated(UUID.randomUUID(), "EUR");
 
     this.eventPublisher.publishDomainEvent(event);
 
