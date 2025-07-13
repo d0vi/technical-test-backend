@@ -41,10 +41,10 @@ docker compose up -d
 ./mvnw spring-boot:run
 ```
 
-Or, if you wish to run the test suite:
+Or, if you wish to run the complete test suite:
 
 ```
-./mvnw test
+./mvnw verify
 ```
 
 ### 📡 API Endpoints

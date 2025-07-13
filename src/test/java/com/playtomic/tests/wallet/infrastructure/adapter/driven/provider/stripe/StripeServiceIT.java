@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 
 @AutoConfigureWireMock(port = 9999)
-public class StripeServiceTest extends WalletApplicationIT {
+public class StripeServiceIT extends WalletApplicationIT {
 
   @Autowired private StripeService stripeService;
 
