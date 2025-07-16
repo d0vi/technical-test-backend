@@ -118,7 +118,9 @@ POST /api/v1/wallets/{id}/top-up
   "creditCard": "4242424242424242",
   "amount": 100.50
 }
-Response: "331541d6-617d-4464-b7d0-9b346b87f41c"
+Response: {
+  "paymentId": "331541d6-617d-4464-b7d0-9b346b87f41c"
+}
 
 // Get Wallet Info
 GET /api/v1/wallets/{id}

@@ -7,6 +7,7 @@ import com.playtomic.tests.wallet.domain.model.wallet.Transaction;
 import com.playtomic.tests.wallet.domain.model.wallet.Wallet;
 import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.CreateWalletRequest;
 import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.TopUpRequest;
+import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.TopUpResponse;
 import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.WalletInfoResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -50,10 +51,10 @@ public class WalletController {
   }
 
   @PostMapping("/{id}/top-up")
-  public ResponseEntity<String> topUpWallet(
+  public ResponseEntity<TopUpResponse> topUpWallet(
       @PathVariable("id") UUID walletId, @Valid @RequestBody TopUpRequest request) {
     String paymentId = this.topUpUseCase.execute(walletId, request.creditCard(), request.amount());
-    return ResponseEntity.ok(paymentId);
+    return ResponseEntity.ok(new TopUpResponse(paymentId));
   }
 
   private WalletInfoResponse toWalletResponse(Wallet wallet) {
