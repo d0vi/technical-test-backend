@@ -1,6 +1,7 @@
 package com.playtomic.tests.wallet.infrastructure.configuration;
 
 import com.playtomic.tests.wallet.application.usecase.wallet.write.ProcessPaymentUseCase;
+import com.playtomic.tests.wallet.application.usecase.wallet.write.RefundPaymentUseCase;
 import com.playtomic.tests.wallet.domain.model.wallet.DomainEventBus;
 import com.playtomic.tests.wallet.infrastructure.adapter.driven.messaging.producer.RabbitMQEventPublisher;
 import com.playtomic.tests.wallet.infrastructure.adapter.driver.messaging.consumer.RabbitMQEventListener;
@@ -137,7 +138,9 @@ public class MessagingConfiguration {
   }
 
   @Bean
-  public RabbitMQEventListener eventListener(final ProcessPaymentUseCase processPaymentUseCase) {
-    return new RabbitMQEventListener(processPaymentUseCase);
+  public RabbitMQEventListener eventListener(
+      final ProcessPaymentUseCase processPaymentUseCase,
+      final RefundPaymentUseCase refundPaymentUseCase) {
+    return new RabbitMQEventListener(processPaymentUseCase, refundPaymentUseCase);
   }
 }

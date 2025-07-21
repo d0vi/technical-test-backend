@@ -3,6 +3,7 @@ package com.playtomic.tests.wallet.infrastructure.adapter.driven.messaging.produ
 import com.playtomic.tests.wallet.domain.model.wallet.DomainEventBus;
 import com.playtomic.tests.wallet.domain.model.wallet.event.Event;
 import com.playtomic.tests.wallet.domain.model.wallet.event.PaymentCreated;
+import com.playtomic.tests.wallet.domain.model.wallet.event.PaymentRefunded;
 import com.playtomic.tests.wallet.domain.model.wallet.event.WalletCreated;
 import com.playtomic.tests.wallet.domain.model.wallet.event.WalletToppedUp;
 import com.playtomic.tests.wallet.infrastructure.configuration.MessagingConfiguration;
@@ -25,6 +26,7 @@ public class RabbitMQEventPublisher implements DomainEventBus {
     switch (event) {
       case WalletCreated walletCreated -> publishWalletCreated(walletCreated);
       case PaymentCreated paymentCreated -> publishPaymentProcessed(paymentCreated);
+      case PaymentRefunded paymentRefunded -> publishPaymentRefunded(paymentRefunded);
       case WalletToppedUp walletToppedUp -> publishWalletToppedUp(walletToppedUp);
       default -> log.warn("Unknown domain event type: {}", event.getClass().getSimpleName());
     }
@@ -47,12 +49,21 @@ public class RabbitMQEventPublisher implements DomainEventBus {
     }
   }
 
+  private void publishPaymentRefunded(PaymentRefunded event) {
+    try {
+      rabbitTemplate.convertAndSend(
+          MessagingConfiguration.PLAYTOMIC_EXCHANGE, "payment.refunded", event);
+    } catch (Exception e) {
+      log.error("Error publishing PaymentRefunded event", e);
+    }
+  }
+
   private void publishWalletToppedUp(WalletToppedUp event) {
     try {
       rabbitTemplate.convertAndSend(
           MessagingConfiguration.PLAYTOMIC_EXCHANGE, "wallet.top-up", event);
     } catch (Exception e) {
-      log.error("Error publishing WalletRefunded event", e);
+      log.error("Error publishing WalletToppedUp event", e);
     }
   }
 }

@@ -3,6 +3,7 @@ package com.playtomic.tests.wallet.infrastructure.configuration;
 import com.playtomic.tests.wallet.application.usecase.wallet.read.GetInfoUseCase;
 import com.playtomic.tests.wallet.application.usecase.wallet.write.CreateWalletUseCase;
 import com.playtomic.tests.wallet.application.usecase.wallet.write.ProcessPaymentUseCase;
+import com.playtomic.tests.wallet.application.usecase.wallet.write.RefundPaymentUseCase;
 import com.playtomic.tests.wallet.application.usecase.wallet.write.TopUpUseCase;
 import com.playtomic.tests.wallet.domain.model.wallet.DomainEventBus;
 import com.playtomic.tests.wallet.domain.model.wallet.WalletRepository;
@@ -28,6 +29,14 @@ public class UseCaseConfiguration {
   public ProcessPaymentUseCase processPaymentUseCase(
       final WalletRepository walletRepository, final DomainEventBus eventBus) {
     return new ProcessPaymentUseCase(walletRepository, eventBus);
+  }
+
+  @Bean
+  public RefundPaymentUseCase refundPaymentUseCase(
+      final WalletRepository walletRepository,
+      final PaymentService paymentService,
+      final DomainEventBus eventBus) {
+    return new RefundPaymentUseCase(walletRepository, paymentService, eventBus);
   }
 
   @Bean

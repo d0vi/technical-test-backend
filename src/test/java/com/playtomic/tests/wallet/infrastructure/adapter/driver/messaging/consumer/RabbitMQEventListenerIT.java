@@ -8,6 +8,7 @@ import com.playtomic.tests.wallet.WalletApplicationIT;
 import com.playtomic.tests.wallet.application.usecase.wallet.write.CreateWalletUseCase;
 import com.playtomic.tests.wallet.application.usecase.wallet.write.ProcessPaymentUseCase;
 import com.playtomic.tests.wallet.domain.model.wallet.event.PaymentCreated;
+import com.playtomic.tests.wallet.domain.model.wallet.event.PaymentRefunded;
 import com.playtomic.tests.wallet.domain.model.wallet.event.WalletCreated;
 import com.playtomic.tests.wallet.domain.model.wallet.event.WalletToppedUp;
 import com.playtomic.tests.wallet.infrastructure.configuration.MessagingConfiguration;
@@ -90,5 +91,27 @@ class RabbitMQEventListenerIT extends WalletApplicationIT {
             () ->
                 verify(this.processPaymentUseCase, atLeastOnce())
                     .execute(walletId, paymentId.toString(), new BigDecimal("50.00")));
+  }
+
+  @Test
+  @DisplayName("should handle a payment refunded event")
+  void should_handle_a_payment_refunded_event() {
+    UUID walletId = UUID.randomUUID();
+    String paymentId = UUID.randomUUID().toString();
+    PaymentRefunded event =
+        new PaymentRefunded(walletId, paymentId, new BigDecimal("75.00"), "USD");
+
+    this.rabbitTemplate.convertAndSend(
+        MessagingConfiguration.PLAYTOMIC_EXCHANGE, "payment.refunded", event);
+
+    await()
+        .atMost(Duration.ofSeconds(3))
+        .pollDelay(Duration.ofMillis(100))
+        .until(
+            () ->
+                this.rabbitAdmin
+                        .getQueueInfo(MessagingConfiguration.PAYMENT_EVENTS_QUEUE)
+                        .getMessageCount()
+                    == 0);
   }
 }
