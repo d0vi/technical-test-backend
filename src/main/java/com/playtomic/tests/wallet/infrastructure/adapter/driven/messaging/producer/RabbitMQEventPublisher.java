@@ -2,7 +2,7 @@ package com.playtomic.tests.wallet.infrastructure.adapter.driven.messaging.produ
 
 import com.playtomic.tests.wallet.domain.model.wallet.DomainEventBus;
 import com.playtomic.tests.wallet.domain.model.wallet.event.Event;
-import com.playtomic.tests.wallet.domain.model.wallet.event.PaymentProcessed;
+import com.playtomic.tests.wallet.domain.model.wallet.event.PaymentCreated;
 import com.playtomic.tests.wallet.domain.model.wallet.event.WalletCreated;
 import com.playtomic.tests.wallet.domain.model.wallet.event.WalletToppedUp;
 import com.playtomic.tests.wallet.infrastructure.configuration.MessagingConfiguration;
@@ -24,7 +24,7 @@ public class RabbitMQEventPublisher implements DomainEventBus {
   public void publishDomainEvent(Event event) {
     switch (event) {
       case WalletCreated walletCreated -> publishWalletCreated(walletCreated);
-      case PaymentProcessed paymentProcessed -> publishPaymentProcessed(paymentProcessed);
+      case PaymentCreated paymentCreated -> publishPaymentProcessed(paymentCreated);
       case WalletToppedUp walletToppedUp -> publishWalletToppedUp(walletToppedUp);
       default -> log.warn("Unknown domain event type: {}", event.getClass().getSimpleName());
     }
@@ -38,7 +38,7 @@ public class RabbitMQEventPublisher implements DomainEventBus {
     }
   }
 
-  private void publishPaymentProcessed(PaymentProcessed event) {
+  private void publishPaymentProcessed(PaymentCreated event) {
     try {
       rabbitTemplate.convertAndSend(
           MessagingConfiguration.PLAYTOMIC_EXCHANGE, "payment.new", event);

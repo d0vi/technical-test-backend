@@ -7,7 +7,7 @@ import static org.mockito.Mockito.verify;
 import com.playtomic.tests.wallet.WalletApplicationIT;
 import com.playtomic.tests.wallet.application.usecase.wallet.write.CreateWalletUseCase;
 import com.playtomic.tests.wallet.application.usecase.wallet.write.ProcessPaymentUseCase;
-import com.playtomic.tests.wallet.domain.model.wallet.event.PaymentProcessed;
+import com.playtomic.tests.wallet.domain.model.wallet.event.PaymentCreated;
 import com.playtomic.tests.wallet.domain.model.wallet.event.WalletCreated;
 import com.playtomic.tests.wallet.domain.model.wallet.event.WalletToppedUp;
 import com.playtomic.tests.wallet.infrastructure.configuration.MessagingConfiguration;
@@ -78,9 +78,8 @@ class RabbitMQEventListenerIT extends WalletApplicationIT {
   void should_handle_a_process_payment_event() {
     UUID walletId = this.createWalletUseCase.execute("EUR").id();
     UUID paymentId = UUID.randomUUID();
-    PaymentProcessed event =
-        new PaymentProcessed(
-            walletId, paymentId.toString(), new BigDecimal("50.00"), "credit_card");
+    PaymentCreated event =
+        new PaymentCreated(walletId, paymentId.toString(), new BigDecimal("50.00"));
 
     this.rabbitTemplate.convertAndSend(
         MessagingConfiguration.PLAYTOMIC_EXCHANGE, "payment.new", event);

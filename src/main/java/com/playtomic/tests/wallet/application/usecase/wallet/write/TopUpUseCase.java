@@ -2,7 +2,7 @@ package com.playtomic.tests.wallet.application.usecase.wallet.write;
 
 import com.playtomic.tests.wallet.domain.model.wallet.DomainEventBus;
 import com.playtomic.tests.wallet.domain.model.wallet.WalletRepository;
-import com.playtomic.tests.wallet.domain.model.wallet.event.PaymentProcessed;
+import com.playtomic.tests.wallet.domain.model.wallet.event.PaymentCreated;
 import com.playtomic.tests.wallet.domain.model.wallet.exception.UnknownWalletIdException;
 import com.playtomic.tests.wallet.domain.model.wallet.service.PaymentService;
 import java.math.BigDecimal;
@@ -26,8 +26,7 @@ public class TopUpUseCase {
 
     String paymentId = this.paymentService.charge(creditCard, amount);
 
-    this.eventPublisher.publishDomainEvent(
-        new PaymentProcessed(walletId, paymentId, amount, "credit_card"));
+    this.eventPublisher.publishDomainEvent(new PaymentCreated(walletId, paymentId, amount));
 
     return paymentId;
   }

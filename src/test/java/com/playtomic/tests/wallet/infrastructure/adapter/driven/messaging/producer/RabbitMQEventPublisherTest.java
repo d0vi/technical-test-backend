@@ -2,7 +2,7 @@ package com.playtomic.tests.wallet.infrastructure.adapter.driven.messaging.produ
 
 import static org.mockito.Mockito.verify;
 
-import com.playtomic.tests.wallet.domain.model.wallet.event.PaymentProcessed;
+import com.playtomic.tests.wallet.domain.model.wallet.event.PaymentCreated;
 import com.playtomic.tests.wallet.domain.model.wallet.event.WalletCreated;
 import com.playtomic.tests.wallet.domain.model.wallet.event.WalletToppedUp;
 import com.playtomic.tests.wallet.infrastructure.configuration.MessagingConfiguration;
@@ -37,12 +37,9 @@ class RabbitMQEventPublisherTest {
   @Test
   @DisplayName("should publish a payment processed event to correct routing key")
   void should_publish_a_payment_processed_event_to_correct_routing_key() {
-    PaymentProcessed event =
-        new PaymentProcessed(
-            UUID.randomUUID(),
-            UUID.randomUUID().toString(),
-            new BigDecimal("100.00"),
-            "credit_card");
+    PaymentCreated event =
+        new PaymentCreated(
+            UUID.randomUUID(), UUID.randomUUID().toString(), new BigDecimal("100.00"));
 
     this.eventPublisher.publishDomainEvent(event);
 

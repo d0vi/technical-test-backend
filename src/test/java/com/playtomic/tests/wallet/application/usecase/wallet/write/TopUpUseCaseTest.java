@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 import com.playtomic.tests.wallet.domain.model.wallet.DomainEventBus;
 import com.playtomic.tests.wallet.domain.model.wallet.Wallet;
 import com.playtomic.tests.wallet.domain.model.wallet.WalletRepository;
-import com.playtomic.tests.wallet.domain.model.wallet.event.PaymentProcessed;
+import com.playtomic.tests.wallet.domain.model.wallet.event.PaymentCreated;
 import com.playtomic.tests.wallet.domain.model.wallet.exception.UnknownWalletIdException;
 import com.playtomic.tests.wallet.domain.model.wallet.service.PaymentService;
 import com.playtomic.tests.wallet.helper.WalletTestBuilder;
@@ -81,10 +81,9 @@ class TopUpUseCaseTest {
         .publishDomainEvent(
             argThat(
                 event ->
-                    event instanceof PaymentProcessed
-                        && ((PaymentProcessed) event).walletId().equals(walletId)
-                        && ((PaymentProcessed) event).paymentId().equals(paymentId)
-                        && ((PaymentProcessed) event).amount().equals(amount)
-                        && ((PaymentProcessed) event).paymentMethod().equals("credit_card")));
+                    event instanceof PaymentCreated
+                        && ((PaymentCreated) event).walletId().equals(walletId)
+                        && ((PaymentCreated) event).paymentId().equals(paymentId)
+                        && ((PaymentCreated) event).amount().equals(amount)));
   }
 }

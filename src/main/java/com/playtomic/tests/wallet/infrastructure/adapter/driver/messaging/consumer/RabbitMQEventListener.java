@@ -2,7 +2,7 @@ package com.playtomic.tests.wallet.infrastructure.adapter.driver.messaging.consu
 
 import com.playtomic.tests.wallet.application.usecase.wallet.write.ProcessPaymentUseCase;
 import com.playtomic.tests.wallet.domain.model.wallet.event.Event;
-import com.playtomic.tests.wallet.domain.model.wallet.event.PaymentProcessed;
+import com.playtomic.tests.wallet.domain.model.wallet.event.PaymentCreated;
 import com.playtomic.tests.wallet.domain.model.wallet.event.WalletCreated;
 import com.playtomic.tests.wallet.domain.model.wallet.event.WalletToppedUp;
 import com.playtomic.tests.wallet.infrastructure.configuration.MessagingConfiguration;
@@ -32,7 +32,7 @@ public class RabbitMQEventListener {
   }
 
   @RabbitListener(queues = MessagingConfiguration.PAYMENT_EVENTS_QUEUE)
-  public void handlePaymentEvents(PaymentProcessed event) {
+  public void handlePaymentEvents(PaymentCreated event) {
     // currently just one kind of payment event
     try {
       processPaymentUseCase.execute(event.walletId(), event.paymentId(), event.amount());
