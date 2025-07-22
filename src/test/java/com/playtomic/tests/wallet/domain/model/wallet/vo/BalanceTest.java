@@ -43,7 +43,7 @@ class BalanceTest {
   void should_throw_an_exception_when_amount_is_null() {
     assertThatThrownBy(() -> new Balance(null))
         .isInstanceOf(InvalidBalanceException.class)
-        .hasMessage("Wallet balance cannot be null");
+        .hasMessage("Wallet balance can not be null");
   }
 
   @Test

@@ -55,7 +55,7 @@ class RefundPaymentUseCaseTest {
 
     assertThatThrownBy(() -> this.refundPaymentUseCase.execute(walletId, paymentId, amount))
         .isInstanceOf(UnknownWalletIdException.class)
-        .hasMessage("Could not found wallet with UUID '" + walletId + "'");
+        .hasMessage("Wallet " + walletId + " can not be found");
   }
 
   @Test

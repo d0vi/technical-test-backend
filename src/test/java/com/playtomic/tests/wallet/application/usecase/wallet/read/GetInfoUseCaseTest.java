@@ -47,6 +47,6 @@ class GetInfoUseCaseTest {
 
     assertThatThrownBy(() -> this.getInfoUseCase.execute(walletId))
         .isInstanceOf(UnknownWalletIdException.class)
-        .hasMessage("Could not found wallet with UUID '" + walletId + "'");
+        .hasMessage("Wallet " + walletId + " can not be found");
   }
 }

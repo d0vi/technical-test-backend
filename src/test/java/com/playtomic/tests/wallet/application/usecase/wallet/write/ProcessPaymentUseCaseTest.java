@@ -61,7 +61,7 @@ class ProcessPaymentUseCaseTest {
                 this.processPaymentUseCase.execute(
                     walletId, "d9183c7d-a682-47be-9817-96d3627539ee", new BigDecimal("100.00")))
         .isInstanceOf(UnknownWalletIdException.class)
-        .hasMessage("Could not found wallet with UUID '" + walletId + "'");
+        .hasMessage("Wallet " + walletId + " can not be found");
   }
 
   @Test

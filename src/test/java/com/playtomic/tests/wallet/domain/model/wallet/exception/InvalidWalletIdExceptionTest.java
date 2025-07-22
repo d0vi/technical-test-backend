@@ -14,7 +14,7 @@ class InvalidWalletIdExceptionTest {
     InvalidWalletIdException exception = new InvalidWalletIdException();
 
     assertThat(exception).isInstanceOf(RuntimeException.class);
-    assertThat(exception.getMessage()).isEqualTo("Wallet UUID must not be null nor empty");
+    assertThat(exception.getMessage()).isEqualTo("Wallet id must not be null or empty");
   }
 
   @Test
@@ -25,7 +25,6 @@ class InvalidWalletIdExceptionTest {
     InvalidWalletIdException exception = new InvalidWalletIdException(invalidWalletId);
 
     assertThat(exception).isInstanceOf(RuntimeException.class);
-    assertThat(exception.getMessage())
-        .isEqualTo("Wallet UUID '" + invalidWalletId + "' is not valid");
+    assertThat(exception.getMessage()).isEqualTo(invalidWalletId + " is not a valid wallet id");
   }
 }

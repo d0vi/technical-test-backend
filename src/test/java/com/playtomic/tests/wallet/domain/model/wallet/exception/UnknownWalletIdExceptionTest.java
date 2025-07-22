@@ -16,7 +16,6 @@ class UnknownWalletIdExceptionTest {
     UnknownWalletIdException exception = new UnknownWalletIdException(walletId);
 
     assertThat(exception).isInstanceOf(RuntimeException.class);
-    assertThat(exception.getMessage())
-        .isEqualTo("Could not found wallet with UUID '" + walletId + "'");
+    assertThat(exception.getMessage()).isEqualTo("Wallet " + walletId + " can not be found");
   }
 }

@@ -5,6 +5,6 @@ import java.util.UUID;
 public class UnknownWalletIdException extends RuntimeException {
 
   public UnknownWalletIdException(final UUID walletId) {
-    super("Could not found wallet with UUID '" + walletId.toString() + "'");
+    super("Wallet " + walletId.toString() + " can not be found");
   }
 }

@@ -60,12 +60,12 @@ class TopUpUseCaseTest {
 
     assertThatThrownBy(() -> this.topUpUseCase.execute(walletId, creditCard, amount))
         .isInstanceOf(UnknownWalletIdException.class)
-        .hasMessage("Could not found wallet with UUID '" + walletId + "'");
+        .hasMessage("Wallet " + walletId + " can not be found");
   }
 
   @Test
-  @DisplayName("should publish a payment processed event")
-  void should_publish_a_payment_processed_event() {
+  @DisplayName("should publish a payment created event")
+  void should_publish_a_payment_created_event() {
     UUID walletId = UUID.randomUUID();
     String creditCard = "4242424242424242";
     BigDecimal amount = new BigDecimal("200.00");

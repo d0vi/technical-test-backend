@@ -3,10 +3,10 @@ package com.playtomic.tests.wallet.domain.model.wallet.exception;
 public class InvalidWalletIdException extends RuntimeException {
 
   public InvalidWalletIdException() {
-    super("Wallet UUID must not be null nor empty");
+    super("Wallet id must not be null or empty");
   }
 
   public InvalidWalletIdException(String value) {
-    super("Wallet UUID '" + value + "' is not valid");
+    super(value + " is not a valid wallet id");
   }
 }
