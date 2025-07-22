@@ -3,10 +3,8 @@ package com.playtomic.tests.wallet.infrastructure.adapter.driven.provider.stripe
 import java.io.IOException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResponseErrorHandler;
 
-@Component
 public class StripeRestTemplateResponseErrorHandler implements ResponseErrorHandler {
 
   @Override
