@@ -29,7 +29,11 @@ class RabbitMQEventPublishingIT extends WalletApplicationIT {
   void should_publish_a_wallet_topped_up_event() {
     var event =
         new WalletToppedUp(
-            UUID.randomUUID(), new BigDecimal("50.00"), BigDecimal.ZERO, new BigDecimal("50.00"));
+            UUID.randomUUID(),
+            new BigDecimal("50.00"),
+            BigDecimal.ZERO,
+            new BigDecimal("50.00"),
+            "USD");
 
     this.eventBus.publishDomainEvent(event);
 

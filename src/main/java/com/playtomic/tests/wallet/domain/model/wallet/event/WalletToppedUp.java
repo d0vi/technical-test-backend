@@ -4,5 +4,9 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public record WalletToppedUp(
-    UUID walletId, BigDecimal amount, BigDecimal previousBalance, BigDecimal newBalance)
+    UUID walletId,
+    BigDecimal amount,
+    BigDecimal previousBalance,
+    BigDecimal newBalance,
+    String currency)
     implements Event {}

@@ -29,6 +29,6 @@ public class ProcessPaymentUseCase {
     this.repository.save(wallet);
 
     this.eventPublisher.publishDomainEvent(
-        new WalletToppedUp(walletId, amount, previousBalance, wallet.balance()));
+        new WalletToppedUp(walletId, amount, previousBalance, wallet.balance(), wallet.currency()));
   }
 }

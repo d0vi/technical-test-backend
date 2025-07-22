@@ -58,7 +58,7 @@ class RabbitMQEventListenerIT extends WalletApplicationIT {
     UUID walletId = UUID.randomUUID();
     WalletToppedUp event =
         new WalletToppedUp(
-            walletId, new BigDecimal("100.00"), BigDecimal.ZERO, new BigDecimal("100.00"));
+            walletId, new BigDecimal("100.00"), BigDecimal.ZERO, new BigDecimal("100.00"), "USD");
 
     this.rabbitTemplate.convertAndSend(
         MessagingConfiguration.PLAYTOMIC_EXCHANGE, "wallet.top-up", event);

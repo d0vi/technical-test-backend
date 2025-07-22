@@ -70,7 +70,13 @@ class ProcessPaymentUseCaseTest {
     UUID walletId = UUID.randomUUID();
     BigDecimal amount = new BigDecimal("75.50");
     BigDecimal initialBalance = new BigDecimal("25.00");
-    Wallet wallet = new WalletTestBuilder().withId(walletId).withBalance(initialBalance).build();
+    String currency = "USD";
+    Wallet wallet =
+        new WalletTestBuilder()
+            .withId(walletId)
+            .withBalance(initialBalance)
+            .withCurrency(currency)
+            .build();
     when(this.walletRepository.findById(any())).thenReturn(Optional.of(wallet));
 
     this.processPaymentUseCase.execute(walletId, "d9183c7d-a682-47be-9817-96d3627539ee", amount);
@@ -83,8 +89,7 @@ class ProcessPaymentUseCaseTest {
                         && ((WalletToppedUp) event).walletId().equals(walletId)
                         && ((WalletToppedUp) event).amount().equals(amount)
                         && ((WalletToppedUp) event).previousBalance().equals(initialBalance)
-                        && ((WalletToppedUp) event)
-                            .newBalance()
-                            .equals(initialBalance.add(amount))));
+                        && ((WalletToppedUp) event).newBalance().equals(initialBalance.add(amount))
+                        && ((WalletToppedUp) event).currency().equals(currency)));
   }
 }
