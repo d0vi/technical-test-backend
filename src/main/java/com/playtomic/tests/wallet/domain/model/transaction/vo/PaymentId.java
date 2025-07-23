@@ -1,6 +1,6 @@
-package com.playtomic.tests.wallet.domain.model.wallet.vo;
+package com.playtomic.tests.wallet.domain.model.transaction.vo;
 
-import com.playtomic.tests.wallet.domain.model.wallet.exception.InvalidPaymentIdException;
+import com.playtomic.tests.wallet.domain.model.transaction.exception.InvalidPaymentIdException;
 import java.util.UUID;
 
 public record PaymentId(UUID uuid) {

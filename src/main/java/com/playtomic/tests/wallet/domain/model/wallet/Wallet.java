@@ -1,14 +1,9 @@
 package com.playtomic.tests.wallet.domain.model.wallet;
 
-import com.playtomic.tests.wallet.domain.model.wallet.vo.Audit;
-import com.playtomic.tests.wallet.domain.model.wallet.vo.Balance;
-import com.playtomic.tests.wallet.domain.model.wallet.vo.Currency;
-import com.playtomic.tests.wallet.domain.model.wallet.vo.Version;
-import com.playtomic.tests.wallet.domain.model.wallet.vo.WalletId;
+import com.playtomic.tests.wallet.domain.model.shared.vo.Version;
+import com.playtomic.tests.wallet.domain.model.wallet.vo.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -22,7 +17,6 @@ public class Wallet {
   private final Currency currency;
   private final Version version;
   private Audit audit;
-  private final List<Transaction> transactions;
 
   public Wallet(String currency) {
     this.id = new WalletId(UUID.randomUUID());
@@ -30,7 +24,6 @@ public class Wallet {
     this.currency = new Currency(currency);
     this.version = new Version();
     this.audit = new Audit();
-    this.transactions = new ArrayList<>();
   }
 
   public Wallet(
@@ -40,14 +33,12 @@ public class Wallet {
       Long version,
       LocalDateTime createdAt,
       LocalDateTime updatedAt,
-      LocalDateTime deletedAt,
-      List<Transaction> transactions) {
+      LocalDateTime deletedAt) {
     this.id = new WalletId(id);
     this.balance = new Balance(balance);
     this.currency = new Currency(currency);
     this.version = new Version(version);
     this.audit = new Audit(createdAt, updatedAt, deletedAt);
-    this.transactions = new ArrayList<>(transactions);
   }
 
   public UUID id() {
@@ -78,14 +69,8 @@ public class Wallet {
     return this.audit.deletedAt();
   }
 
-  public List<Transaction> transactions() {
-    return new ArrayList<>(transactions);
-  }
-
-  public void deposit(BigDecimal amount, String paymentId) {
+  public void deposit(BigDecimal amount) {
     this.balance = this.balance.add(amount);
     this.audit = new Audit(this.audit.createdAt(), LocalDateTime.now(), null);
-
-    this.transactions.add(new Transaction(this.id().toString(), amount, paymentId));
   }
 }

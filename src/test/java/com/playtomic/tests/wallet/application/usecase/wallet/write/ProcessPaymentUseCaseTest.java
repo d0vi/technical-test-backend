@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.playtomic.tests.wallet.domain.model.transaction.TransactionRepository;
 import com.playtomic.tests.wallet.domain.model.wallet.DomainEventBus;
 import com.playtomic.tests.wallet.domain.model.wallet.Wallet;
 import com.playtomic.tests.wallet.domain.model.wallet.WalletRepository;
@@ -26,6 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class ProcessPaymentUseCaseTest {
 
   @Mock private WalletRepository walletRepository;
+  @Mock private TransactionRepository transactionRepository;
   @Mock private DomainEventBus domainEventBus;
 
   @InjectMocks private ProcessPaymentUseCase processPaymentUseCase;
@@ -46,8 +48,15 @@ class ProcessPaymentUseCaseTest {
             argThat(
                 savedWallet ->
                     savedWallet.balance().equals(initialBalance.add(amount))
-                        && savedWallet.transactions().size() == 1
                         && savedWallet.updatedAt() != null));
+    verify(this.transactionRepository)
+        .save(
+            argThat(
+                savedTransaction ->
+                    savedTransaction.amount().equals(amount)
+                        && savedTransaction
+                            .paymentId()
+                            .equals("d9183c7d-a682-47be-9817-96d3627539ee")));
   }
 
   @Test

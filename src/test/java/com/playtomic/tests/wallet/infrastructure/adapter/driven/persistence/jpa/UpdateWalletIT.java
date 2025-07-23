@@ -29,7 +29,7 @@ class UpdateWalletIT extends WalletApplicationIT {
                 .build());
     assertThat(wallet.updatedAt()).isNull();
 
-    wallet.deposit(new BigDecimal("100.00"), UUID.randomUUID().toString());
+    wallet.deposit(new BigDecimal("100.00"));
     Wallet updatedWallet = this.walletRepository.save(wallet);
 
     assertThat(updatedWallet.id()).isEqualTo(wallet.id());

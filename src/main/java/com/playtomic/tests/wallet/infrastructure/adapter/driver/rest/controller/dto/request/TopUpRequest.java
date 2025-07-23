@@ -1,4 +1,4 @@
-package com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto;
+package com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

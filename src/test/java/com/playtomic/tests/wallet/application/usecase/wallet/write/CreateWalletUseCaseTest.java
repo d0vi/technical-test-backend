@@ -39,14 +39,10 @@ class CreateWalletUseCaseTest {
     assertThat(result).isEqualTo(expectedWallet);
     assertThat(result.id()).isNotNull();
     assertThat(result.balance().compareTo(BigDecimal.ZERO)).isEqualTo(0);
-    assertThat(result.transactions()).isEmpty();
     verify(this.walletRepository)
         .save(
             argThat(
-                wallet ->
-                    wallet.id() != null
-                        && wallet.balance().compareTo(BigDecimal.ZERO) == 0
-                        && wallet.transactions().isEmpty()));
+                wallet -> wallet.id() != null && wallet.balance().compareTo(BigDecimal.ZERO) == 0));
   }
 
   @Test

@@ -108,8 +108,7 @@ POST /api/v1/wallets
 Response: {
   "id": "uuid",
   "balance": 0.00,
-  "currency": "EUR",
-  "transactions": []
+  "currency": "EUR"
 }
 
 // Top Up Wallet
@@ -127,16 +126,7 @@ GET /api/v1/wallets/{id}
 Response: {
   "id": "uuid",
   "balance": 100.50,
-  "currency": "EUR",
-  "transactions": [
-    {
-      "id": "uuid",
-      "type": "DEPOSIT",
-      "amount": 100.50,
-      "paymentId": "331541d6-617d-4464-b7d0-9b346b87f41c",
-      "createdAt": "2023-12-25T10:30:00"
-    }
-  ]
+  "currency": "EUR"
 }
 ```
 
@@ -150,20 +140,14 @@ Response: {
 - `createdAt` (Timestamp) - Creation timestamp
 - `updatedAt` (Timestamp) - Last update timestamp
 - `deletedAt` (Timestamp) - Soft deletion timestamp
-- `transactions` (List) - Associated transactions
 
-### Transaction Class
-```java
-public class Transaction {
-    private final TransactionId id;
-    private final WalletId walletId;
-    private final TransactionType type;
-    private final BigDecimal amount;
-    private final PaymentId paymentId;
-    private final LocalDateTime createdAt;
-    // constructors and methods...
-}
-```
+### Transaction Entity
+- `id` (UUID) - Primary key
+- `walletId` (UUID) - Wallet id
+- `type` (TransactionType) - Type of transaction
+- `amount` (BigDecimal) - Amount transfered
+- `paymentId` (String) - Payment platform's payment id
+- `createdAt` (Timestamp) - Creation timestamp
 
 ## Testing Strategy
 

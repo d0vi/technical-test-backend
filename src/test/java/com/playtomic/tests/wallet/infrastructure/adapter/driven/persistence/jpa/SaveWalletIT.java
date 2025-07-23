@@ -6,7 +6,6 @@ import com.playtomic.tests.wallet.WalletApplicationIT;
 import com.playtomic.tests.wallet.domain.model.wallet.Wallet;
 import com.playtomic.tests.wallet.domain.model.wallet.WalletRepository;
 import java.math.BigDecimal;
-import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,14 +36,11 @@ class SaveWalletIT extends WalletApplicationIT {
   @DisplayName("should save a wallet with transactions")
   void should_save_a_wallet_with_transactions() {
     Wallet wallet = new Wallet(CURRENCY_EUR);
-    wallet.deposit(new BigDecimal("50.00"), UUID.randomUUID().toString());
-    wallet.deposit(new BigDecimal("25.00"), UUID.randomUUID().toString());
+    wallet.deposit(new BigDecimal("50.00"));
+    wallet.deposit(new BigDecimal("25.00"));
 
     Wallet savedWallet = this.walletRepository.save(wallet);
 
-    assertThat(savedWallet.transactions()).hasSize(2);
-    assertThat(savedWallet.balance()).isEqualByComparingTo(new BigDecimal("75.00"));
-    assertThat(savedWallet.transactions()).hasSize(2);
     assertThat(savedWallet.balance()).isEqualByComparingTo(new BigDecimal("75.00"));
   }
 }

@@ -7,10 +7,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.playtomic.tests.wallet.WalletApplicationIT;
-import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.CreateWalletRequest;
-import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.TopUpRequest;
-import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.TopUpResponse;
-import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.WalletInfoResponse;
+import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.request.CreateWalletRequest;
+import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.request.TopUpRequest;
+import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.response.TopUpResponse;
+import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.response.WalletSummaryResponse;
 import java.math.BigDecimal;
 import java.util.concurrent.TimeUnit;
 import org.awaitility.Awaitility;
@@ -53,12 +53,11 @@ class WalletE2ETest extends WalletApplicationIT {
     assertThat(createResponse.getStatusCode().value()).isEqualTo(200);
     assertThat(createResponse.getBody()).isNotNull();
 
-    WalletInfoResponse walletInfo =
-        objectMapper.readValue(createResponse.getBody(), WalletInfoResponse.class);
+    WalletSummaryResponse walletInfo =
+        objectMapper.readValue(createResponse.getBody(), WalletSummaryResponse.class);
     assertThat(walletInfo.id()).isNotNull();
     assertThat(walletInfo.balance()).isEqualTo(new BigDecimal("0.00"));
     assertThat(walletInfo.currency()).isEqualTo(CURRENCY_EUR);
-    assertThat(walletInfo.transactions()).isEmpty();
 
     String walletId = walletInfo.id().toString();
 
@@ -68,12 +67,11 @@ class WalletE2ETest extends WalletApplicationIT {
     assertThat(getResponse.getStatusCode().value()).isEqualTo(200);
     assertThat(getResponse.getBody()).isNotNull();
 
-    WalletInfoResponse retrievedWallet =
-        objectMapper.readValue(getResponse.getBody(), WalletInfoResponse.class);
+    WalletSummaryResponse retrievedWallet =
+        objectMapper.readValue(getResponse.getBody(), WalletSummaryResponse.class);
     assertThat(retrievedWallet.id().toString()).isEqualTo(walletId);
     assertThat(retrievedWallet.balance()).isEqualTo(new BigDecimal("0.00"));
     assertThat(retrievedWallet.currency()).isEqualTo(CURRENCY_EUR);
-    assertThat(retrievedWallet.transactions()).isEmpty();
   }
 
   @Test
@@ -82,14 +80,14 @@ class WalletE2ETest extends WalletApplicationIT {
     CreateWalletRequest requestEur = new CreateWalletRequest(CURRENCY_EUR);
     CreateWalletRequest requestUsd = new CreateWalletRequest(CURRENCY_USD);
 
-    ResponseEntity<WalletInfoResponse> responseEur =
-        restTemplate.postForEntity(getBaseUrl(), requestEur, WalletInfoResponse.class);
+    ResponseEntity<WalletSummaryResponse> responseEur =
+        restTemplate.postForEntity(getBaseUrl(), requestEur, WalletSummaryResponse.class);
 
     assertThat(responseEur.getStatusCode().value()).isEqualTo(200);
     assertThat(responseEur.getBody().currency()).isEqualTo(CURRENCY_EUR);
 
-    ResponseEntity<WalletInfoResponse> responseUsd =
-        restTemplate.postForEntity(getBaseUrl(), requestUsd, WalletInfoResponse.class);
+    ResponseEntity<WalletSummaryResponse> responseUsd =
+        restTemplate.postForEntity(getBaseUrl(), requestUsd, WalletSummaryResponse.class);
 
     assertThat(responseUsd.getStatusCode().value()).isEqualTo(200);
     assertThat(responseUsd.getBody().currency()).isEqualTo(CURRENCY_USD);
@@ -98,7 +96,7 @@ class WalletE2ETest extends WalletApplicationIT {
   @Test
   @DisplayName("should handle multiple top-ups to same wallet")
   void should_handle_multiple_top_ups_to_same_wallet() throws Exception {
-    ResponseEntity<WalletInfoResponse> createResponse = createWallet();
+    ResponseEntity<WalletSummaryResponse> createResponse = createWallet();
 
     assertThat(createResponse.getStatusCode().value()).isEqualTo(200);
     String walletId = createResponse.getBody().id().toString();
@@ -138,20 +136,19 @@ class WalletE2ETest extends WalletApplicationIT {
         .pollInterval(100, TimeUnit.MILLISECONDS)
         .untilAsserted(
             () -> {
-              ResponseEntity<WalletInfoResponse> getResponse =
+              ResponseEntity<WalletSummaryResponse> getResponse =
                   restTemplate.getForEntity(
-                      getBaseUrl() + "/" + walletId, WalletInfoResponse.class);
+                      getBaseUrl() + "/" + walletId, WalletSummaryResponse.class);
 
               assertThat(getResponse.getStatusCode().value()).isEqualTo(200);
               assertThat(getResponse.getBody().balance()).isEqualTo(new BigDecimal("100.00"));
-              assertThat(getResponse.getBody().transactions()).hasSize(2);
             });
   }
 
   @Test
   @DisplayName("should handle stripe payment failures")
   void should_handle_stripe_payment_failures() throws Exception {
-    ResponseEntity<WalletInfoResponse> createResponse = createWallet();
+    ResponseEntity<WalletSummaryResponse> createResponse = createWallet();
 
     assertThat(createResponse.getStatusCode().value()).isEqualTo(200);
     String walletId = createResponse.getBody().id().toString();
@@ -167,16 +164,15 @@ class WalletE2ETest extends WalletApplicationIT {
 
     assertThat(topUpResponse.getStatusCode().value()).isEqualTo(422);
 
-    ResponseEntity<WalletInfoResponse> getResponse =
-        restTemplate.getForEntity(getBaseUrl() + "/" + walletId, WalletInfoResponse.class);
+    ResponseEntity<WalletSummaryResponse> getResponse =
+        restTemplate.getForEntity(getBaseUrl() + "/" + walletId, WalletSummaryResponse.class);
 
     assertThat(getResponse.getStatusCode().value()).isEqualTo(200);
     assertThat(getResponse.getBody().balance()).isEqualTo("0.00");
-    assertThat(getResponse.getBody().transactions()).isEmpty();
   }
 
-  private ResponseEntity<WalletInfoResponse> createWallet() {
+  private ResponseEntity<WalletSummaryResponse> createWallet() {
     CreateWalletRequest createRequest = new CreateWalletRequest(CURRENCY_EUR);
-    return restTemplate.postForEntity(getBaseUrl(), createRequest, WalletInfoResponse.class);
+    return restTemplate.postForEntity(getBaseUrl(), createRequest, WalletSummaryResponse.class);
   }
 }

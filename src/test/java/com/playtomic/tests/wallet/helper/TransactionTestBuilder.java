@@ -1,6 +1,6 @@
 package com.playtomic.tests.wallet.helper;
 
-import com.playtomic.tests.wallet.domain.model.wallet.Transaction;
+import com.playtomic.tests.wallet.domain.model.transaction.Transaction;
 import java.math.BigDecimal;
 import java.util.UUID;
 

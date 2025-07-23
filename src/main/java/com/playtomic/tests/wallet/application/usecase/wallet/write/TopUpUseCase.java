@@ -25,9 +25,7 @@ public class TopUpUseCase {
     this.repository.findById(walletId).orElseThrow(() -> new UnknownWalletIdException(walletId));
 
     String paymentId = this.paymentService.charge(creditCard, amount);
-
     this.eventPublisher.publishDomainEvent(new PaymentCreated(walletId, paymentId, amount));
-
     return paymentId;
   }
 }

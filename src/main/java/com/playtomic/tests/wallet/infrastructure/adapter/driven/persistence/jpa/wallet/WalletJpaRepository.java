@@ -1,4 +1,4 @@
-package com.playtomic.tests.wallet.infrastructure.adapter.driven.persistence.jpa;
+package com.playtomic.tests.wallet.infrastructure.adapter.driven.persistence.jpa.wallet;
 
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;

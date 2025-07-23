@@ -1,12 +1,7 @@
-package com.playtomic.tests.wallet.infrastructure.adapter.driven.persistence.jpa;
+package com.playtomic.tests.wallet.infrastructure.adapter.driven.persistence.jpa.transaction;
 
-import com.playtomic.tests.wallet.domain.model.wallet.vo.TransactionType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.playtomic.tests.wallet.domain.model.transaction.vo.TransactionType;
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -42,4 +37,8 @@ public class TransactionEntity {
 
   @Column(name = "created_at", nullable = false)
   private Timestamp createdAt;
+
+  @Version
+  @Column(name = "version", nullable = false)
+  private Long version;
 }

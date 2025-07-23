@@ -1,18 +1,12 @@
-package com.playtomic.tests.wallet.infrastructure.adapter.driven.persistence.jpa;
+package com.playtomic.tests.wallet.infrastructure.adapter.driven.persistence.jpa.wallet;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,8 +43,4 @@ public class WalletEntity {
   @Version
   @Column(name = "version", nullable = false)
   private Long version;
-
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-  @JoinColumn(name = "wallet_id")
-  private List<TransactionEntity> transactions = new ArrayList<>();
 }

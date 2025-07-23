@@ -2,6 +2,7 @@ package com.playtomic.tests.wallet.domain.model.wallet.vo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.playtomic.tests.wallet.domain.model.transaction.vo.TransactionType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

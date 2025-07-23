@@ -2,15 +2,15 @@ package com.playtomic.tests.wallet.infrastructure.adapter.driven.persistence.jpa
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.playtomic.tests.wallet.domain.model.wallet.Transaction;
+import com.playtomic.tests.wallet.domain.model.transaction.Transaction;
 import com.playtomic.tests.wallet.domain.model.wallet.Wallet;
-import com.playtomic.tests.wallet.domain.model.wallet.vo.TransactionType;
 import com.playtomic.tests.wallet.helper.TransactionTestBuilder;
 import com.playtomic.tests.wallet.helper.WalletTestBuilder;
+import com.playtomic.tests.wallet.infrastructure.adapter.driven.persistence.jpa.wallet.WalletEntity;
+import com.playtomic.tests.wallet.infrastructure.adapter.driven.persistence.jpa.wallet.WalletEntityMapper;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,6 @@ class WalletEntityMapperTest {
             .withCreatedAt(createdAt)
             .withUpdatedAt(updatedAt)
             .withDeletedAt(deletedAt)
-            .withTransaction(transaction)
             .build();
 
     WalletEntity entity = mapper.toEntity(wallet);
@@ -50,13 +49,6 @@ class WalletEntityMapperTest {
     assertThat(entity.getCreatedAt().toLocalDateTime()).isEqualTo(createdAt);
     assertThat(entity.getUpdatedAt().toLocalDateTime()).isEqualTo(updatedAt);
     assertThat(entity.getDeletedAt().toLocalDateTime()).isEqualTo(deletedAt);
-    assertThat(entity.getTransactions()).hasSize(1);
-    TransactionEntity transactionEntity = entity.getTransactions().getFirst();
-    assertThat(transactionEntity.getId()).isEqualTo(transaction.id());
-    assertThat(transactionEntity.getWalletId()).isEqualTo(walletId);
-    assertThat(transactionEntity.getType()).isEqualTo(TransactionType.DEPOSIT);
-    assertThat(transactionEntity.getAmount()).isEqualByComparingTo(new BigDecimal("100.50"));
-    assertThat(transactionEntity.getPaymentId()).isEqualTo(transaction.paymentId());
   }
 
   @Test
@@ -70,15 +62,6 @@ class WalletEntityMapperTest {
     entity.setVersion(3L);
     entity.setCreatedAt(Timestamp.valueOf(LocalDateTime.now().minusHours(2)));
     entity.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
-    TransactionEntity transactionEntity =
-        new TransactionEntity(
-            UUID.randomUUID(),
-            walletId,
-            TransactionType.DEPOSIT,
-            new BigDecimal("75.25"),
-            UUID.randomUUID().toString(),
-            Timestamp.valueOf(LocalDateTime.now().minusHours(1)));
-    entity.setTransactions(List.of(transactionEntity));
 
     Wallet wallet = mapper.toDomain(entity);
 

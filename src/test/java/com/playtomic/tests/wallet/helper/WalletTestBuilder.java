@@ -1,11 +1,8 @@
 package com.playtomic.tests.wallet.helper;
 
-import com.playtomic.tests.wallet.domain.model.wallet.Transaction;
 import com.playtomic.tests.wallet.domain.model.wallet.Wallet;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class WalletTestBuilder {
@@ -17,7 +14,6 @@ public class WalletTestBuilder {
   private LocalDateTime createdAt = LocalDateTime.now();
   private LocalDateTime updatedAt = null;
   private LocalDateTime deletedAt = null;
-  private List<Transaction> transactions = new ArrayList<>();
 
   public WalletTestBuilder withId(String id) {
     this.id = id;
@@ -64,23 +60,7 @@ public class WalletTestBuilder {
     return this;
   }
 
-  public WalletTestBuilder withTransactions(List<Transaction> transactions) {
-    this.transactions = new ArrayList<>(transactions);
-    return this;
-  }
-
-  public WalletTestBuilder withTransaction(Transaction transaction) {
-    this.transactions.add(transaction);
-    return this;
-  }
-
-  public WalletTestBuilder withNoTransactions() {
-    this.transactions = new ArrayList<>();
-    return this;
-  }
-
   public Wallet build() {
-    return new Wallet(
-        id, balance, currency, version, createdAt, updatedAt, deletedAt, transactions);
+    return new Wallet(id, balance, currency, version, createdAt, updatedAt, deletedAt);
   }
 }

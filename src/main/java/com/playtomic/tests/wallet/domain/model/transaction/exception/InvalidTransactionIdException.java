@@ -1,4 +1,4 @@
-package com.playtomic.tests.wallet.domain.model.wallet.exception;
+package com.playtomic.tests.wallet.domain.model.transaction.exception;
 
 public class InvalidTransactionIdException extends RuntimeException {
 

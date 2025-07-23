@@ -1,8 +1,9 @@
-package com.playtomic.tests.wallet.domain.model.wallet;
+package com.playtomic.tests.wallet.domain.model.transaction;
 
-import com.playtomic.tests.wallet.domain.model.wallet.vo.PaymentId;
-import com.playtomic.tests.wallet.domain.model.wallet.vo.TransactionId;
-import com.playtomic.tests.wallet.domain.model.wallet.vo.TransactionType;
+import com.playtomic.tests.wallet.domain.model.shared.vo.Version;
+import com.playtomic.tests.wallet.domain.model.transaction.vo.PaymentId;
+import com.playtomic.tests.wallet.domain.model.transaction.vo.TransactionId;
+import com.playtomic.tests.wallet.domain.model.transaction.vo.TransactionType;
 import com.playtomic.tests.wallet.domain.model.wallet.vo.WalletId;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ public class Transaction {
   private final TransactionType type;
   private final BigDecimal amount;
   private final PaymentId paymentId;
+  private final Version version;
   private final LocalDateTime createdAt;
 
   public Transaction(
@@ -26,23 +28,25 @@ public class Transaction {
       TransactionType type,
       BigDecimal amount,
       String paymentId,
+      Long version,
       LocalDateTime createdAt) {
     this.id = new TransactionId(id);
     this.walletId = new WalletId(walletId);
     this.type = type;
     this.amount = amount;
     this.paymentId = new PaymentId(paymentId);
+    this.version = new Version(version);
     this.createdAt = createdAt;
   }
 
   public Transaction(String walletId, BigDecimal amount, String paymentId) {
-    this(
-        UUID.randomUUID().toString(),
-        walletId,
-        TransactionType.DEPOSIT,
-        amount,
-        paymentId,
-        LocalDateTime.now());
+    this.id = new TransactionId(UUID.randomUUID());
+    this.walletId = new WalletId(walletId);
+    this.type = TransactionType.DEPOSIT;
+    this.amount = amount;
+    this.paymentId = new PaymentId(paymentId);
+    this.version = new Version();
+    this.createdAt = LocalDateTime.now();
   }
 
   public UUID id() {
@@ -63,6 +67,10 @@ public class Transaction {
 
   public String paymentId() {
     return this.paymentId.uuid().toString();
+  }
+
+  public Long version() {
+    return this.version.value();
   }
 
   public LocalDateTime createdAt() {

@@ -7,15 +7,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.playtomic.tests.wallet.application.usecase.transaction.read.GetTransactionsUseCase;
 import com.playtomic.tests.wallet.application.usecase.wallet.read.GetInfoUseCase;
 import com.playtomic.tests.wallet.application.usecase.wallet.write.CreateWalletUseCase;
 import com.playtomic.tests.wallet.application.usecase.wallet.write.TopUpUseCase;
+import com.playtomic.tests.wallet.domain.model.transaction.Page;
+import com.playtomic.tests.wallet.domain.model.transaction.Transaction;
 import com.playtomic.tests.wallet.domain.model.wallet.Wallet;
 import com.playtomic.tests.wallet.domain.model.wallet.exception.UnknownWalletIdException;
 import com.playtomic.tests.wallet.helper.WalletTestBuilder;
-import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.CreateWalletRequest;
-import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.TopUpRequest;
+import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.request.CreateWalletRequest;
+import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.request.TopUpRequest;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -29,6 +33,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 @WebMvcTest(WalletController.class)
 class WalletControllerTest {
@@ -45,6 +50,8 @@ class WalletControllerTest {
   @MockitoBean private CreateWalletUseCase createWalletUseCase;
 
   @MockitoBean private GetInfoUseCase getInfoUseCase;
+
+  @MockitoBean private GetTransactionsUseCase getTransactionsUseCase;
 
   @MockitoBean private TopUpUseCase topUpUseCase;
 
@@ -64,8 +71,7 @@ class WalletControllerTest {
             status().isOk(),
             jsonPath("$.id").value(wallet.id().toString()),
             jsonPath("$.balance").value(wallet.balance().doubleValue()),
-            jsonPath("$.currency").value(wallet.currency()),
-            jsonPath("$.transactions").isEmpty());
+            jsonPath("$.currency").value(wallet.currency()));
   }
 
   @ParameterizedTest(name = "when {1}")
@@ -96,8 +102,7 @@ class WalletControllerTest {
             status().isOk(),
             jsonPath("$.id").value(wallet.id().toString()),
             jsonPath("$.balance").value(wallet.balance().doubleValue()),
-            jsonPath("$.currency").value(wallet.currency()),
-            jsonPath("$.transactions").isEmpty());
+            jsonPath("$.currency").value(wallet.currency()));
   }
 
   @Test
@@ -153,6 +158,65 @@ class WalletControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  @DisplayName("should get wallet transactions successfully")
+  void should_get_wallet_transactions_successfully() throws Exception {
+    UUID walletId = UUID.fromString(WALLET_ID);
+    when(getTransactionsUseCase.execute(walletId, 0, 10))
+        .thenReturn(
+            new Page<>(
+                List.of(
+                    new Transaction(walletId.toString(), new BigDecimal("50.00"), PAYMENT_ID),
+                    new Transaction(
+                        walletId.toString(),
+                        new BigDecimal("25.00"),
+                        UUID.randomUUID().toString())),
+                0,
+                1,
+                2,
+                false,
+                false));
+
+    ResultActions result =
+        mockMvc.perform(
+            get("/api/v1/wallets/{id}/transactions", WALLET_ID)
+                .param("page", "0")
+                .param("size", "10"));
+
+    result.andExpectAll(
+        status().isOk(),
+        jsonPath("$.transactions").isArray(),
+        jsonPath("$.transactions.length()").value(2),
+        jsonPath("$.transactions[0].amount").value(50.00),
+        jsonPath("$.transactions[1].amount").value(25.00),
+        jsonPath("$.transactions[0].type").value("DEPOSIT"),
+        jsonPath("$.transactions[1].type").value("DEPOSIT"),
+        jsonPath("$.transactions[0].paymentId").value(PAYMENT_ID),
+        jsonPath("$.currentPage").value(0),
+        jsonPath("$.totalPages").value(1),
+        jsonPath("$.totalElements").value(2),
+        jsonPath("$.hasNext").value(false),
+        jsonPath("$.hasPrevious").value(false));
+  }
+
+  @Test
+  @DisplayName("should get wallet transactions with default pagination")
+  void should_get_wallet_transactions_with_default_pagination() throws Exception {
+    UUID walletId = UUID.fromString(WALLET_ID);
+    when(getTransactionsUseCase.execute(walletId, 0, 10))
+        .thenReturn(new Page<>(List.of(), 0, 0, 0, false, false));
+
+    ResultActions result = mockMvc.perform(get("/api/v1/wallets/{id}/transactions", WALLET_ID));
+
+    result.andExpectAll(
+        status().isOk(),
+        jsonPath("$.transactions").isArray(),
+        jsonPath("$.transactions.length()").value(0),
+        jsonPath("$.currentPage").value(0),
+        jsonPath("$.totalPages").value(0),
+        jsonPath("$.totalElements").value(0));
   }
 
   private static Stream<Arguments> provideInvalidTopUpRequests() {
