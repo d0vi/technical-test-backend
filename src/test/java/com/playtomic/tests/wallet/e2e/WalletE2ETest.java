@@ -43,8 +43,8 @@ class WalletE2ETest extends WalletApplicationIT {
   }
 
   @Test
-  @DisplayName("should create a wallet successfully")
-  void should_create_a_wallet_successfully() throws Exception {
+  @DisplayName("should create a wallet")
+  void should_create_a_wallet() throws Exception {
     CreateWalletRequest request = new CreateWalletRequest(CURRENCY_EUR);
 
     ResponseEntity<String> createResponse =

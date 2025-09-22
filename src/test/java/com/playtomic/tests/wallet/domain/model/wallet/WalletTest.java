@@ -50,8 +50,8 @@ class WalletTest {
   }
 
   @Test
-  @DisplayName("should deposit an amount successfully")
-  void should_deposit_amount_successfully() {
+  @DisplayName("should deposit an amount")
+  void should_deposit_amount() {
     Wallet wallet = new Wallet(CURRENCY_EUR);
     BigDecimal initialBalance = wallet.balance();
     BigDecimal depositAmount = new BigDecimal("100.50");

@@ -56,22 +56,22 @@ class WalletControllerTest {
   @MockitoBean private TopUpUseCase topUpUseCase;
 
   @Test
-  @DisplayName("should create a wallet successfully")
-  void should_create_a_wallet_successfully() throws Exception {
+  @DisplayName("should create a wallet")
+  void should_create_a_wallet() throws Exception {
     Wallet wallet = new WalletTestBuilder().build();
-
     when(createWalletUseCase.execute(CURRENCY_EUR)).thenReturn(wallet);
 
-    mockMvc
-        .perform(
+    ResultActions result =
+        mockMvc.perform(
             post("/api/v1/wallets")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new CreateWalletRequest(CURRENCY_EUR))))
-        .andExpectAll(
-            status().isOk(),
-            jsonPath("$.id").value(wallet.id().toString()),
-            jsonPath("$.balance").value(wallet.balance().doubleValue()),
-            jsonPath("$.currency").value(wallet.currency()));
+                .content(objectMapper.writeValueAsString(new CreateWalletRequest(CURRENCY_EUR))));
+
+    result.andExpectAll(
+        status().isOk(),
+        jsonPath("$.id").value(wallet.id().toString()),
+        jsonPath("$.balance").value(wallet.balance().doubleValue()),
+        jsonPath("$.currency").value(wallet.currency()));
   }
 
   @ParameterizedTest(name = "when {1}")
@@ -80,56 +80,57 @@ class WalletControllerTest {
   void should_return_bad_request(String currency, String reason) throws Exception {
     CreateWalletRequest request = new CreateWalletRequest(currency);
 
-    mockMvc
-        .perform(
+    ResultActions result =
+        mockMvc.perform(
             post("/api/v1/wallets")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().isBadRequest());
+                .content(objectMapper.writeValueAsString(request)));
+
+    result.andExpect(status().isBadRequest());
   }
 
   @Test
-  @DisplayName("should get a wallet's info successfully")
-  void should_get_a_wallets_info_successfully() throws Exception {
+  @DisplayName("should get a wallet's info")
+  void should_get_a_wallets_info() throws Exception {
     UUID walletId = UUID.fromString(WALLET_ID);
     Wallet wallet = new WalletTestBuilder().withId(walletId).build();
-
     when(getInfoUseCase.execute(walletId)).thenReturn(wallet);
 
-    mockMvc
-        .perform(get("/api/v1/wallets/{id}", WALLET_ID))
-        .andExpectAll(
-            status().isOk(),
-            jsonPath("$.id").value(wallet.id().toString()),
-            jsonPath("$.balance").value(wallet.balance().doubleValue()),
-            jsonPath("$.currency").value(wallet.currency()));
+    ResultActions result = mockMvc.perform(get("/api/v1/wallets/{id}", WALLET_ID));
+
+    result.andExpectAll(
+        status().isOk(),
+        jsonPath("$.id").value(wallet.id().toString()),
+        jsonPath("$.balance").value(wallet.balance().doubleValue()),
+        jsonPath("$.currency").value(wallet.currency()));
   }
 
   @Test
   @DisplayName("should return not found when a wallet does not exist")
   void should_return_not_found_when_a_wallet_does_not_exist() throws Exception {
     UUID walletId = UUID.fromString(WALLET_ID);
-
     when(getInfoUseCase.execute(walletId)).thenThrow(new UnknownWalletIdException(walletId));
 
-    mockMvc.perform(get("/api/v1/wallets/{id}", WALLET_ID)).andExpect(status().isNotFound());
+    ResultActions result = mockMvc.perform(get("/api/v1/wallets/{id}", WALLET_ID));
+
+    result.andExpect(status().isNotFound());
   }
 
   @Test
-  @DisplayName("should top up a wallet successfully")
-  void should_top_up_a_wallet_successfully() throws Exception {
+  @DisplayName("should top up a wallet")
+  void should_top_up_a_wallet() throws Exception {
     UUID walletId = UUID.fromString(WALLET_ID);
     TopUpRequest request = new TopUpRequest(CREDIT_CARD, new BigDecimal("100.00"));
-
     when(topUpUseCase.execute(walletId, CREDIT_CARD, new BigDecimal("100.00")))
         .thenReturn(PAYMENT_ID);
 
-    mockMvc
-        .perform(
+    ResultActions result =
+        mockMvc.perform(
             post("/api/v1/wallets/{id}/top-up", WALLET_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-        .andExpectAll(status().isOk(), jsonPath("$.paymentId").value(PAYMENT_ID));
+                .content(objectMapper.writeValueAsString(request)));
+
+    result.andExpectAll(status().isOk(), jsonPath("$.paymentId").value(PAYMENT_ID));
   }
 
   @ParameterizedTest(name = "when {2}")
@@ -139,12 +140,13 @@ class WalletControllerTest {
       throws Exception {
     TopUpRequest request = new TopUpRequest(creditCard, amount);
 
-    mockMvc
-        .perform(
+    ResultActions result =
+        mockMvc.perform(
             post("/api/v1/wallets/{id}/top-up", WALLET_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().isBadRequest());
+                .content(objectMapper.writeValueAsString(request)));
+
+    result.andExpect(status().isBadRequest());
   }
 
   @Test
@@ -152,17 +154,18 @@ class WalletControllerTest {
   void should_return_bad_request_when_a_wallet_id_is_invalid() throws Exception {
     TopUpRequest request = new TopUpRequest(CREDIT_CARD, new BigDecimal("100.00"));
 
-    mockMvc
-        .perform(
+    ResultActions result =
+        mockMvc.perform(
             post("/api/v1/wallets/{id}/top-up", "invalid-uuid")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().isBadRequest());
+                .content(objectMapper.writeValueAsString(request)));
+
+    result.andExpect(status().isBadRequest());
   }
 
   @Test
-  @DisplayName("should get wallet transactions successfully")
-  void should_get_wallet_transactions_successfully() throws Exception {
+  @DisplayName("should get wallet transactions")
+  void should_get_wallet_transactions() throws Exception {
     UUID walletId = UUID.fromString(WALLET_ID);
     when(getTransactionsUseCase.execute(walletId, 0, 10))
         .thenReturn(
