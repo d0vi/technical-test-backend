@@ -18,7 +18,7 @@
 	</parent>
 
 	<properties>
-		<java.version>24</java.version>
+		<java.version>25</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 	</properties>
@@ -102,9 +102,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<jvmArguments>--enable-preview</jvmArguments>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>com.spotify.fmt</groupId>
@@ -122,7 +119,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<compilerArgs>--enable-preview</compilerArgs>
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>
@@ -135,16 +131,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<argLine>--enable-preview</argLine>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<configuration>
-					<argLine>--enable-preview</argLine>
-				</configuration>
 				<executions>
 					<execution>
 						<goals>

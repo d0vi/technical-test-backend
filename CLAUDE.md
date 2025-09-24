@@ -288,17 +288,6 @@ See `adrs/` directory for detailed Architectural Decision Records:
 - [005: Comprehensive Testing Strategy](adrs/005_testing_strategy.md)
 - [006: Optimistic Locking for Wallet Entities](adrs/006_optimistic_locking.md)
 
-## Known Issues and Solutions
-
-### Java 24 + Lombok Compatibility
-- **Issue**: Lombok annotation processing fails with Java 24 preview features
-- **Solution**: Manual getter/setter implementation where needed
-- **Alternative**: Consider replacing Lombok with records or manual code
-
-### Testing with Preview Features
-- **Issue**: Tests fail without preview features enabled
-- **Solution**: Configure Surefire plugin with `--enable-preview` flag
-
 ## Development Guidelines
 
 ### Code Style
