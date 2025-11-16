@@ -9,6 +9,9 @@ import com.playtomic.tests.wallet.domain.model.wallet.event.WalletToppedUp;
 import com.playtomic.tests.wallet.domain.model.wallet.exception.UnknownWalletIdException;
 import java.math.BigDecimal;
 import java.util.UUID;
+import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.transaction.annotation.Transactional;
 
 public class ProcessPaymentUseCase {
@@ -26,6 +29,10 @@ public class ProcessPaymentUseCase {
     this.eventPublisher = eventBus;
   }
 
+  @Retryable(
+      retryFor = OptimisticLockingFailureException.class,
+      maxAttempts = 5,
+      backoff = @Backoff(delay = 250))
   @Transactional
   public void execute(UUID walletId, String paymentId, BigDecimal amount) {
     Wallet wallet =

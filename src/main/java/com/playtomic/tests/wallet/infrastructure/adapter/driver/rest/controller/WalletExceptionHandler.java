@@ -5,6 +5,7 @@ import com.playtomic.tests.wallet.domain.model.wallet.exception.InvalidWalletIdE
 import com.playtomic.tests.wallet.domain.model.wallet.exception.UnknownWalletIdException;
 import com.playtomic.tests.wallet.infrastructure.adapter.driven.provider.stripe.StripeAmountTooSmallException;
 import java.time.Instant;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -51,6 +52,19 @@ public class WalletExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatus.UNPROCESSABLE_ENTITY, "Stripe could not process the payment");
     problemDetail.setTitle("Payment error");
     problemDetail.setProperty("code", "PAYMENT_ERROR");
+    problemDetail.setProperty("timestamp", Instant.now());
+    return problemDetail;
+  }
+
+  @ExceptionHandler(OptimisticLockingFailureException.class)
+  public ProblemDetail handleOptimisticLockingFailureException(
+      OptimisticLockingFailureException e) {
+    ProblemDetail problemDetail =
+        ProblemDetail.forStatusAndDetail(
+            HttpStatus.CONFLICT,
+            "The wallet was modified by another request. Please retry your operation.");
+    problemDetail.setTitle("Concurrent modification detected");
+    problemDetail.setProperty("code", "OPTIMISTIC_LOCK_ERROR");
     problemDetail.setProperty("timestamp", Instant.now());
     return problemDetail;
   }

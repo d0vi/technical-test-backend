@@ -30,6 +30,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -131,6 +132,29 @@ class WalletControllerTest {
                 .content(objectMapper.writeValueAsString(request)));
 
     result.andExpectAll(status().isOk(), jsonPath("$.paymentId").value(PAYMENT_ID));
+  }
+
+  @Test
+  @DisplayName("should return conflict when optimistic locking fails")
+  void should_return_conflict_when_optimistic_locking_fails() throws Exception {
+    UUID walletId = UUID.fromString(WALLET_ID);
+    TopUpRequest request = new TopUpRequest(CREDIT_CARD, new BigDecimal("100.00"));
+    when(topUpUseCase.execute(walletId, CREDIT_CARD, new BigDecimal("100.00")))
+        .thenThrow(new OptimisticLockingFailureException("Version conflict"));
+
+    ResultActions result =
+        mockMvc.perform(
+            post("/api/v1/wallets/{id}/top-up", WALLET_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
+
+    result.andExpectAll(
+        status().isConflict(),
+        jsonPath("$.title").value("Concurrent modification detected"),
+        jsonPath("$.detail")
+            .value("The wallet was modified by another request. Please retry your operation."),
+        jsonPath("$.code").value("OPTIMISTIC_LOCK_ERROR"),
+        jsonPath("$.status").value(409));
   }
 
   @ParameterizedTest(name = "when {2}")

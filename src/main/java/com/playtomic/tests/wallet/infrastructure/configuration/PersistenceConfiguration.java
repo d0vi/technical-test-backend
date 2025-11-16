@@ -9,7 +9,9 @@ import com.playtomic.tests.wallet.infrastructure.adapter.driven.persistence.jpa.
 import com.playtomic.tests.wallet.infrastructure.adapter.driven.persistence.jpa.wallet.WalletRepositoryImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.retry.annotation.EnableRetry;
 
+@EnableRetry
 @Configuration
 public class PersistenceConfiguration {
 

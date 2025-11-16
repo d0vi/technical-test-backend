@@ -5,11 +5,8 @@ import com.playtomic.tests.wallet.domain.model.transaction.Transaction;
 import com.playtomic.tests.wallet.domain.model.transaction.TransactionRepository;
 import jakarta.transaction.Transactional;
 import java.util.UUID;
-import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
 
 public class TransactionRepositoryImpl implements TransactionRepository {
 
@@ -29,10 +26,6 @@ public class TransactionRepositoryImpl implements TransactionRepository {
         this.repository.findByWalletIdOrderByCreatedAtDesc(walletId, pageable));
   }
 
-  @Retryable(
-      retryFor = {OptimisticLockingFailureException.class},
-      maxAttempts = 3,
-      backoff = @Backoff(delay = 100))
   @Transactional
   @Override
   public Transaction save(Transaction transaction) {
