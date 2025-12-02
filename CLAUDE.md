@@ -103,7 +103,7 @@ POST   /api/v1/wallets/{id}/top-up   # Top up wallet balance
 // Create Wallet
 POST /api/v1/wallets
 {
-  "currencyCode": "EUR"
+  "currency_code": "EUR"
 }
 Response: {
   "id": "uuid",
@@ -114,11 +114,11 @@ Response: {
 // Top Up Wallet
 POST /api/v1/wallets/{id}/top-up
 {
-  "creditCard": "4242424242424242",
+  "credit_card": "4242424242424242",
   "amount": 100.50
 }
 Response: {
-  "paymentId": "331541d6-617d-4464-b7d0-9b346b87f41c"
+  "payment_id": "331541d6-617d-4464-b7d0-9b346b87f41c"
 }
 
 // Get Wallet Info

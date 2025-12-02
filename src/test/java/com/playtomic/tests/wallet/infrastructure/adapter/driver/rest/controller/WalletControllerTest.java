@@ -131,7 +131,7 @@ class WalletControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
 
-    result.andExpectAll(status().isOk(), jsonPath("$.paymentId").value(PAYMENT_ID));
+    result.andExpectAll(status().isOk(), jsonPath("$.payment_id").value(PAYMENT_ID));
   }
 
   @Test
@@ -220,12 +220,12 @@ class WalletControllerTest {
         jsonPath("$.transactions[1].amount").value(25.00),
         jsonPath("$.transactions[0].type").value("DEPOSIT"),
         jsonPath("$.transactions[1].type").value("DEPOSIT"),
-        jsonPath("$.transactions[0].paymentId").value(PAYMENT_ID),
-        jsonPath("$.currentPage").value(0),
-        jsonPath("$.totalPages").value(1),
-        jsonPath("$.totalElements").value(2),
-        jsonPath("$.hasNext").value(false),
-        jsonPath("$.hasPrevious").value(false));
+        jsonPath("$.transactions[0].payment_id").value(PAYMENT_ID),
+        jsonPath("$.current_page").value(0),
+        jsonPath("$.total_pages").value(1),
+        jsonPath("$.total_elements").value(2),
+        jsonPath("$.has_next").value(false),
+        jsonPath("$.has_previous").value(false));
   }
 
   @Test
@@ -241,9 +241,9 @@ class WalletControllerTest {
         status().isOk(),
         jsonPath("$.transactions").isArray(),
         jsonPath("$.transactions.length()").value(0),
-        jsonPath("$.currentPage").value(0),
-        jsonPath("$.totalPages").value(0),
-        jsonPath("$.totalElements").value(0));
+        jsonPath("$.current_page").value(0),
+        jsonPath("$.total_pages").value(0),
+        jsonPath("$.total_elements").value(0));
   }
 
   private static Stream<Arguments> provideInvalidTopUpRequests() {

@@ -1,0 +1,205 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: Scratch Pad
+meta:
+  id: wrk_scratchpad
+  created: 1743028487234
+  modified: 1743028487234
+  description: ""
+collection:
+  - name: Playtomic's assessment
+    meta:
+      id: fld_c9178c82bdcf4f30a8c4d6f67efdfc2c
+      created: 1751215873447
+      modified: 1764709209570
+      sortKey: -1751215873447
+      description: ""
+    children:
+      - url: http://localhost:8090/playtomic/api/v1/wallets
+        name: /playtomic/api/v1/wallets
+        meta:
+          id: req_258fea69a0354600806b9257e0dc77a2
+          created: 1751577542911
+          modified: 1764708873056
+          isPrivate: false
+          description: ""
+          sortKey: -1751577542912
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"currency_code": "USD"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/10.3.1
+        scripts:
+          afterResponse: |
+            const jsonBody = insomnia.response.json();
+            insomnia.environment.set("WALLET_ID", jsonBody.id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8090/playtomic/api/v1/wallets/{{WALLET_ID}}
+        name: /playtomic/api/v1/wallets/{id}
+        meta:
+          id: req_a7e213f537264fb8b2032dad698d4ca2
+          created: 1751579000487
+          modified: 1751640328154
+          isPrivate: false
+          description: ""
+          sortKey: -1751396710114
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/10.3.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8090/playtomic/api/v1/wallets/{{WALLET_ID}}/top-up
+        name: /playtomic/api/v1/wallets/{id}/top-up
+        meta:
+          id: req_8ad70f10c44c4a52b5dc01738d6f8355
+          created: 1751583930473
+          modified: 1764708879222
+          isPrivate: false
+          description: ""
+          sortKey: -1751374106014.25
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"credit_card": "435104481051",
+            	"amount": 72
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/10.3.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8090/playtomic/api/v1/wallets/{{WALLET_ID}}/transactions
+        name: /playtomic/api/v1/wallets/{id}/transactions
+        meta:
+          id: req_c064e55ef43040968b48a29ce3f417f1
+          created: 1753300024409
+          modified: 1753300307111
+          isPrivate: false
+          description: ""
+          sortKey: -1751351501914.5
+        method: GET
+        parameters:
+          - name: page
+            value: "0"
+            description: ""
+            disabled: false
+          - name: size
+            value: "5"
+            description: ""
+            disabled: false
+        headers:
+          - name: User-Agent
+            value: insomnia/10.3.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - name: Stripe
+        meta:
+          id: fld_4c0310993fdd4fba8966e28829a2d341
+          created: 1764708769101
+          modified: 1764708805938
+          sortKey: -1751306293615
+          description: ""
+        children:
+          - url: https://sandbox.playtomic.io/v1/stripe-simulator/charges
+            name: /v1/stripe-simulator/charges
+            meta:
+              id: req_a59fc5a81c7c4857a006acebec2fe023
+              created: 1751215532393
+              modified: 1764708802988
+              isPrivate: false
+              description: ""
+              sortKey: -1764708795766
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"credit_card": "foo",
+                	"amount": 100
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+              - name: User-Agent
+                value: insomnia/10.3.1
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: https://sandbox.playtomic.io/v1/stripe-simulator/payments/ddb4ee88-dc9c-4ae3-8321-e53b35387965/refunds
+            name: /v1/stripe-simulator/payments/{payment_id}/refunds
+            meta:
+              id: req_ca125abb00fd4328b19b56b6c61be1a7
+              created: 1751215944959
+              modified: 1764708801531
+              isPrivate: false
+              description: ""
+              sortKey: -1764708795666
+            method: POST
+            headers:
+              - name: User-Agent
+                value: insomnia/10.3.1
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_99d30891da4bdcebc63947a8fc17f076de878684
+    created: 1743028517367
+    modified: 1764707906110
+environments:
+  name: Base Environment
+  meta:
+    id: env_99d30891da4bdcebc63947a8fc17f076de878684
+    created: 1743028517247
+    modified: 1764707906116
+    isPrivate: false
+  data:
+    WALLET_ID: 04c645b7-197a-418e-a611-340c69b9e38e
