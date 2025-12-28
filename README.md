@@ -14,7 +14,7 @@ Managing your digital wallet never felt so easy 🫢️
 
 ### 🛠️ Tech Stack
 
-- **Spring Boot 3** - Modern Java framework
+- **Spring Boot 4** - Modern Java framework
 - **Spring Data JPA** - Database operations
 - **H2 Database** - In-memory database for development
 - **Flyway** - Database migrations

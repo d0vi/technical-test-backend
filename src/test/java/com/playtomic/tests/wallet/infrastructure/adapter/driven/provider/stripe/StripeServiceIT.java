@@ -8,9 +8,10 @@ import com.playtomic.tests.wallet.WalletApplicationIT;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
+import org.wiremock.spring.ConfigureWireMock;
+import org.wiremock.spring.EnableWireMock;
 
-@AutoConfigureWireMock(port = 9999)
+@EnableWireMock({@ConfigureWireMock(port = 9999)})
 public class StripeServiceIT extends WalletApplicationIT {
 
   @Autowired private StripeService stripeService;

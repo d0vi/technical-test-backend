@@ -1,7 +1,7 @@
 # Playtomic Wallet Service - Technical Assessment
 
 ## Project Overview
-This is a wallet service implementation for Playtomic's technical assessment, built using Domain-Driven Design (DDD) principles with Spring Boot 3.5.3 and Java 24.
+This is a wallet service implementation for Playtomic's technical assessment, built using Domain-Driven Design (DDD) principles with Spring Boot 4 and Java 25.
 
 ## Architecture
 
@@ -39,8 +39,8 @@ src/main/java/com/playtomic/tests/wallet/
 ## Technology Stack
 
 ### Core Technologies
-- **Java 24** with preview features enabled
-- **Spring Boot 3.5.3**
+- **Java 25** with preview features enabled
+- **Spring Boot 4**
 - **Spring Data JPA** for persistence
 - **Spring AMQP** for RabbitMQ messaging
 - **H2 Database** for development/testing
@@ -54,7 +54,7 @@ src/main/java/com/playtomic/tests/wallet/
 - **Custom Test Data Builders** for test object creation
 
 ### Development Tools
-- **Lombok** for reducing boilerplate (with Java 24 compatibility issues)
+- **Lombok** for reducing boilerplate
 - **Flyway** for database migrations
 - **Spotify's fmt-maven-plugin** for code formatting
 - **Maven Surefire** with preview features support
@@ -177,7 +177,7 @@ void should_create_a_wallet() {
 ## Build and Run
 
 ### Prerequisites
-- Java 24 with preview features support
+- Java 25 with preview features support
 - Maven 3.8+
 - Docker (for RabbitMQ)
 
@@ -258,7 +258,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
-          java-version: 24
+          java-version: 25
           distribution: temurin
       - run: ./mvnw clean verify
 ```
@@ -296,7 +296,7 @@ See `adrs/` directory for detailed Architectural Decision Records:
 - Prefer composition over inheritance
 - Use value objects for domain concepts
 - **Favor Java records over classes** for immutable data structures and value objects
-- **Use Lombok sparingly** - prefer records or manual implementations due to Java 24 compatibility issues
+- **Use Lombok sparingly** - prefer records or manual implementations
 
 ### Domain Design Patterns
 - **Value Objects**: Implement as records (e.g., `Currency`, `Balance`, `WalletId`)

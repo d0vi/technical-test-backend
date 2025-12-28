@@ -5,7 +5,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.playtomic.tests.wallet.WalletApplicationIT;
 import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.request.CreateWalletRequest;
 import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.request.TopUpRequest;
@@ -17,14 +16,18 @@ import org.awaitility.Awaitility;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.resttestclient.TestRestTemplate;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.ResponseEntity;
+import org.wiremock.spring.ConfigureWireMock;
+import org.wiremock.spring.EnableWireMock;
+import tools.jackson.databind.ObjectMapper;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureWireMock(port = 9999)
+@EnableWireMock({@ConfigureWireMock(port = 9999)})
+@AutoConfigureTestRestTemplate
 class WalletE2ETest extends WalletApplicationIT {
 
   private static final String CURRENCY_EUR = "EUR";

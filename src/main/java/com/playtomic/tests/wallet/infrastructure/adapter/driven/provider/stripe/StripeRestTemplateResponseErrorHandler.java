@@ -1,6 +1,9 @@
 package com.playtomic.tests.wallet.infrastructure.adapter.driven.provider.stripe;
 
 import java.io.IOException;
+import java.net.URI;
+import org.jspecify.annotations.NonNull;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.ResponseErrorHandler;
@@ -14,8 +17,10 @@ public class StripeRestTemplateResponseErrorHandler implements ResponseErrorHand
   }
 
   @Override
-  public void handleError(ClientHttpResponse response) throws IOException {
-    if (response.getStatusCode() == HttpStatus.UNPROCESSABLE_ENTITY) {
+  public void handleError(
+      @NonNull URI uri, @NonNull HttpMethod httpMethod, ClientHttpResponse response)
+      throws IOException {
+    if (response.getStatusCode() == HttpStatus.UNPROCESSABLE_CONTENT) {
       throw new StripeAmountTooSmallException();
     }
   }
