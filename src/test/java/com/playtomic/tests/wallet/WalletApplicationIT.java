@@ -5,7 +5,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.RabbitMQContainer;
-import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -16,11 +15,7 @@ public class WalletApplicationIT {
 
   @Container
   static RabbitMQContainer rabbitMQ =
-      new RabbitMQContainer("rabbitmq:4.1-management")
-          .withUser("admin", "password")
-          .withVhost("dev")
-          .withPermission("dev", "admin", ".*", ".*", ".*")
-          .waitingFor(Wait.forLogMessage(".*Server startup complete.*", 1));
+      new RabbitMQContainer("rabbitmq:4.2").withEnv("RABBITMQ_DEFAULT_VHOST", "test");
 
   @DynamicPropertySource
   static void configureProperties(DynamicPropertyRegistry registry) {
