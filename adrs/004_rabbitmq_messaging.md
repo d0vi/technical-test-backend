@@ -43,7 +43,6 @@ Adopt RabbitMQ as the message broker for asynchronous communication between boun
 ### Configuration
 ```java
 @Configuration
-@EnableRabbit
 public class RabbitMQConfig {
     
     @Bean
@@ -87,7 +86,6 @@ public class RabbitMQEventBus implements DomainEventBus {
 public class PaymentEventListener {
     
     @RabbitListener(queues = "payment.processed")
-    @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000, multiplier = 2))
     public void handlePaymentProcessed(PaymentProcessed event) {
         processPaymentUseCase.execute(event.walletId(), event.paymentId(), event.amount());
     }
