@@ -31,8 +31,8 @@ public class ProcessPaymentUseCase {
 
   @Retryable(
       retryFor = OptimisticLockingFailureException.class,
-      maxAttempts = 5,
-      backoff = @Backoff(delay = 250))
+      maxAttempts = 10,
+      backoff = @Backoff(delay = 50, maxDelay = 1000, multiplier = 2.0, random = true))
   @Transactional
   public void execute(UUID walletId, String paymentId, BigDecimal amount) {
     Wallet wallet =
