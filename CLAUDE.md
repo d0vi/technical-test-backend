@@ -1,7 +1,7 @@
 # Playtomic Wallet Service - Technical Assessment
 
 ## Project Overview
-This is a wallet service implementation for Playtomic's technical assessment, built using Domain-Driven Design (DDD) principles with Spring Boot 4 and Java 25.
+This is a wallet service implementation for Playtomic's technical assessment, built using Domain-Driven Design (DDD) principles with Spring Boot 4 and Java 26.
 
 ## Architecture
 
@@ -9,37 +9,47 @@ This is a wallet service implementation for Playtomic's technical assessment, bu
 ```
 src/main/java/com/playtomic/tests/wallet/
 ├── domain/
-│   └── model/wallet/
-│       ├── Wallet.java                    # Aggregate Root
-│       ├── Transaction.java               # Java Record (immutable)
-│       ├── WalletRepository.java          # Repository Interface
-│       ├── DomainEventBus.java           # Event Publishing
-│       ├── service/PaymentService.java    # Domain Service
-│       ├── vo/                           # Value Objects
-│       │   ├── Currency.java              # Currency record
-│       │   └── ISO4217CurrencyCode.java   # Currency enum (EUR, USD, etc.)
-│       ├── event/                        # Domain Events
-│       └── exception/                    # Domain Exceptions
+│   └── model/
+│       ├── wallet/
+│       │   ├── Wallet.java                    # Aggregate Root
+│       │   ├── WalletRepository.java          # Repository Interface
+│       │   ├── DomainEventBus.java            # Event Publishing port
+│       │   ├── service/PaymentService.java    # Domain Service
+│       │   ├── vo/                            # Value Objects (Currency, Balance, WalletId, Audit)
+│       │   ├── event/                         # Domain Events (PaymentCreated, WalletCreated, WalletToppedUp, PaymentRefunded)
+│       │   └── exception/                     # Domain Exceptions
+│       └── transaction/
+│           ├── Transaction.java               # Java Record (immutable)
+│           ├── TransactionRepository.java
+│           ├── Page.java                      # Pagination wrapper record
+│           └── vo/                            # TransactionId, TransactionType, PaymentId
 ├── application/
-│   └── usecase/wallet/
-│       ├── read/GetInfoUseCase.java      # Query Operation
-│       └── write/                        # Command Operations
-│           ├── CreateWalletUseCase.java
-│           ├── TopUpUseCase.java         # Payment Processing
-│           └── ProcessPaymentUseCase.java # Wallet Deposit
+│   └── usecase/
+│       ├── wallet/
+│       │   ├── read/GetInfoUseCase.java
+│       │   └── write/
+│       │       ├── CreateWalletUseCase.java
+│       │       ├── TopUpUseCase.java          # Charges payment, publishes PaymentCreated event
+│       │       ├── ProcessPaymentUseCase.java # Deposits balance on PaymentCreated event
+│       │       └── RefundPaymentUseCase.java  # Refunds payment via provider
+│       └── transaction/
+│           └── read/GetTransactionsUseCase.java
 ├── infrastructure/
 │   ├── adapter/driven/
 │   │   ├── persistence/jpa/              # Database Persistence
+│   │   ├── messaging/producer/           # RabbitMQEventPublisher (implements DomainEventBus)
 │   │   └── provider/stripe/              # External Payment Provider
-│   └── adapter/driving/
-│       └── rest/WalletController.java    # REST API
+│   ├── adapter/driver/
+│   │   ├── rest/controller/WalletController.java  # REST API
+│   │   └── messaging/consumer/RabbitMQEventListener.java
+│   └── configuration/                    # Spring bean wiring (UseCaseConfiguration, MessagingConfiguration, etc.)
 └── WalletApplication.java                # Spring Boot Main
 ```
 
 ## Technology Stack
 
 ### Core Technologies
-- **Java 25** with preview features enabled
+- **Java 26**
 - **Spring Boot 4**
 - **Spring Data JPA** for persistence
 - **Spring AMQP** for RabbitMQ messaging
@@ -57,7 +67,7 @@ src/main/java/com/playtomic/tests/wallet/
 - **Lombok** for reducing boilerplate
 - **Flyway** for database migrations
 - **Spotify's fmt-maven-plugin** for code formatting
-- **Maven Surefire** with preview features support
+- **Maven Surefire/Failsafe** for unit and integration test execution
 
 ### CI/CD and Automation
 - **GitHub Actions** for continuous integration
@@ -75,8 +85,9 @@ The system implements an event-driven architecture that separates payment proces
 
 ### Domain Events
 - `WalletCreated` - Published when a new wallet is created
-- `PaymentProcessed` - Published when payment is successfully charged
+- `PaymentCreated` - Published when payment is successfully charged (triggers async balance deposit)
 - `WalletToppedUp` - Published when wallet balance is updated
+- `PaymentRefunded` - Published when a payment is refunded
 
 ### Currency Support
 - **Multi-currency wallets**: Each wallet is created with a specific currency
@@ -92,10 +103,14 @@ The system implements an event-driven architecture that separates payment proces
 ## API Endpoints
 
 ### Wallet Operations
+
+The server runs with context path `/playtomic`, so all endpoints are prefixed with `/playtomic`.
+
 ```
-POST   /api/v1/wallets              # Create new wallet
-GET    /api/v1/wallets/{id}          # Get wallet information
-POST   /api/v1/wallets/{id}/top-up   # Top up wallet balance
+POST   /api/v1/wallets                        # Create new wallet
+GET    /api/v1/wallets/{id}                   # Get wallet information
+POST   /api/v1/wallets/{id}/top-up            # Top up wallet balance
+GET    /api/v1/wallets/{id}/transactions      # Get paginated transactions (?page=0&size=10)
 ```
 
 ### Request/Response Examples
@@ -177,7 +192,7 @@ void should_create_a_wallet() {
 ## Build and Run
 
 ### Prerequisites
-- Java 25 with preview features support
+- Java 26
 - Maven 3.8+
 - Docker (for RabbitMQ)
 
@@ -196,24 +211,6 @@ mvn test -Dtest="*UseCaseTest"
 mvn spring-boot:run
 ```
 
-### Maven Configuration
-```xml
-<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-compiler-plugin</artifactId>
-    <configuration>
-        <compilerArgs>--enable-preview</compilerArgs>
-    </configuration>
-</plugin>
-
-<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-surefire-plugin</artifactId>
-    <configuration>
-        <argLine>--enable-preview</argLine>
-    </configuration>
-</plugin>
-```
 
 ## Infrastructure
 
