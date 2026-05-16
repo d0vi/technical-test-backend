@@ -5,6 +5,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.playtomic.tests.wallet.WalletApplication;
 import com.playtomic.tests.wallet.WalletApplicationIT;
 import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.request.CreateWalletRequest;
 import com.playtomic.tests.wallet.infrastructure.adapter.driver.rest.controller.dto.request.TopUpRequest;
@@ -25,7 +26,9 @@ import org.wiremock.spring.ConfigureWireMock;
 import org.wiremock.spring.EnableWireMock;
 import tools.jackson.databind.ObjectMapper;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    classes = WalletApplication.class)
 @EnableWireMock({@ConfigureWireMock(port = 9999)})
 @AutoConfigureTestRestTemplate
 class WalletE2ETest extends WalletApplicationIT {

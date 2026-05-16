@@ -5,17 +5,17 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.RabbitMQContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-@SpringBootTest
+@SpringBootTest(classes = {WalletApplication.class})
 @ActiveProfiles(profiles = "test")
-@Testcontainers
 public class WalletApplicationIT {
 
-  @Container
   static RabbitMQContainer rabbitMQ =
       new RabbitMQContainer("rabbitmq:4.2").withEnv("RABBITMQ_DEFAULT_VHOST", "test");
+
+  static {
+    rabbitMQ.start();
+  }
 
   @DynamicPropertySource
   static void configureProperties(DynamicPropertyRegistry registry) {
